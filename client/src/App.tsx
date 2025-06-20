@@ -1,0 +1,70 @@
+import { Canvas } from "@react-three/fiber";
+import { Suspense } from "react";
+import { KeyboardControls } from "@react-three/drei";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Game from "./components/game/Game";
+import FieldResonanceHUD from "./components/ui/FieldResonanceHUD";
+import TraitPanel from "./components/ui/TraitPanel";
+import DialogueBox from "./components/ui/DialogueBox";
+import "@fontsource/inter";
+import "./index.css";
+
+const queryClient = new QueryClient();
+
+// Define control keys for the game
+enum Controls {
+  forward = 'forward',
+  backward = 'backward',
+  leftward = 'leftward',
+  rightward = 'rightward',
+  interact = 'interact',
+  openTraits = 'openTraits',
+  jump = 'jump'
+}
+
+const controls = [
+  { name: Controls.forward, keys: ["KeyW", "ArrowUp"] },
+  { name: Controls.backward, keys: ["KeyS", "ArrowDown"] },
+  { name: Controls.leftward, keys: ["KeyA", "ArrowLeft"] },
+  { name: Controls.rightward, keys: ["KeyD", "ArrowRight"] },
+  { name: Controls.interact, keys: ["KeyE"] },
+  { name: Controls.openTraits, keys: ["KeyT"] },
+  { name: Controls.jump, keys: ["Space"] },
+];
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
+        <KeyboardControls map={controls}>
+          <Canvas
+            shadows
+            camera={{
+              position: [0, 8, 12],
+              fov: 45,
+              near: 0.1,
+              far: 1000
+            }}
+            gl={{
+              antialias: true,
+              powerPreference: "high-performance"
+            }}
+          >
+            <color attach="background" args={["#0a0a0f"]} />
+            
+            <Suspense fallback={null}>
+              <Game />
+            </Suspense>
+          </Canvas>
+          
+          {/* UI Overlay */}
+          <FieldResonanceHUD />
+          <TraitPanel />
+          <DialogueBox />
+        </KeyboardControls>
+      </div>
+    </QueryClientProvider>
+  );
+}
+
+export default App;

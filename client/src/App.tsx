@@ -9,6 +9,7 @@ import DialogueBox from "./components/ui/DialogueBox";
 import QuestSystem from "./components/ui/QuestSystem";
 import GameInstructions from "./components/ui/GameInstructions";
 import ExperienceNotification from "./components/ui/ExperienceNotification";
+import GamepadHelpOverlay from "./components/ui/GamepadHelpOverlay";
 import "@fontsource/inter";
 import "./index.css";
 

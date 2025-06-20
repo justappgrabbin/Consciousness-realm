@@ -61,6 +61,7 @@ function App() {
           </Canvas>
           
           {/* UI Overlay */}
+          <ExperienceNotification />
           <FieldResonanceHUD />
           <TraitPanel />
           <DialogueBox />

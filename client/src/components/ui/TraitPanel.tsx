@@ -135,7 +135,7 @@ export default function TraitPanel() {
                       
                       {/* Trait Effects */}
                       <div className="flex flex-wrap gap-1">
-                        {trait.effects.map((effect, i) => (
+                        {trait.effects.map((effect: any, i: number) => (
                           <Badge key={i} variant="outline" className="text-xs">
                             {effect.type}: +{((effect.value - 1) * 100).toFixed(0)}%
                           </Badge>

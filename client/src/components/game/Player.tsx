@@ -77,7 +77,16 @@ export default function Player() {
   useFrame((state, delta) => {
     if (!playerRef.current) return;
     
-    const controls = getState();
+    // Combine keyboard and gamepad inputs
+    const keyboardControls = getState();
+    const controls = {
+      forward: keyboardControls.forward || gamepadState.forward,
+      backward: keyboardControls.backward || gamepadState.backward,
+      leftward: keyboardControls.leftward || gamepadState.leftward,
+      rightward: keyboardControls.rightward || gamepadState.rightward,
+      jump: keyboardControls.jump || gamepadState.jump
+    };
+    
     const player = playerRef.current;
     const velocity = velocityRef.current;
     const activeFieldData = getActiveField();
@@ -88,7 +97,7 @@ export default function Player() {
       const traits = getFieldTraits(activeFieldData.id);
       const strengthTrait = traits.find(t => t.id.includes('strength') || t.id.includes('agility'));
       if (strengthTrait) {
-        const movementEffect = strengthTrait.effects.find(e => e.type === 'movement');
+        const movementEffect = strengthTrait.effects.find((e: any) => e.type === 'movement');
         if (movementEffect) {
           speedMultiplier = movementEffect.value;
         }

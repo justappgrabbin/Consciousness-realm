@@ -68,6 +68,7 @@ function App() {
           <DialogueBox />
           <QuestSystem />
           <GameInstructions />
+          <GamepadHelpOverlay />
         </KeyboardControls>
       </div>
     </QueryClientProvider>

@@ -26,11 +26,14 @@ export default function GameInstructions() {
       if (event.code === 'KeyH') {
         setIsVisible(prev => !prev);
       }
+      if (event.code === 'Escape' && isVisible) {
+        setIsVisible(false);
+      }
     };
     
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [isVisible]);
   
   if (!isVisible) {
     return (

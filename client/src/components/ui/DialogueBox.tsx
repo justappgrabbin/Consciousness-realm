@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNPCs } from "../../lib/stores/useNPCs";
 import { useConsciousness } from "../../lib/stores/useConsciousness";
 import { Card, CardContent } from "./card";
@@ -7,6 +8,18 @@ import { MessageCircle, X } from "lucide-react";
 export default function DialogueBox() {
   const { activeNPC, currentDialogue, endInteraction, nextDialogue } = useNPCs();
   const { activeField } = useConsciousness();
+  
+  // Handle ESC key to close dialogue
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.code === 'Escape' && activeNPC) {
+        endInteraction();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [activeNPC, endInteraction]);
   
   if (!activeNPC || !currentDialogue) return null;
   

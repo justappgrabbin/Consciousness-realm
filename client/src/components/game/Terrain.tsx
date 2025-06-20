@@ -15,17 +15,15 @@ export default function Terrain() {
   return (
     <group>
       {/* Main ground plane */}
-      <mesh position={[0, 0, 0]} receiveShadow>
+      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[100, 100]} />
         <meshLambertMaterial map={grassTexture} />
-        <meshRotateX args={[-Math.PI / 2]} />
       </mesh>
       
       {/* Path connecting ritual zones */}
-      <mesh position={[0, 0.01, 0]} receiveShadow>
+      <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[2, 50]} />
         <meshLambertMaterial map={asphaltTexture} />
-        <meshRotateX args={[-Math.PI / 2]} />
       </mesh>
       
       <mesh position={[0, 0.01, 12.5]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} receiveShadow>
@@ -70,9 +68,7 @@ export default function Terrain() {
           >
             <sphereGeometry args={[0.3, 16, 16]} />
             <meshBasicMaterial
-              color="#ffffff"
-              emissive="#4A90E2"
-              emissiveIntensity={0.2}
+              color="#4A90E2"
               transparent
               opacity={0.7}
             />

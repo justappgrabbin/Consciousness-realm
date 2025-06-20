@@ -1,45 +1,45 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { useConsciousness } from "../../lib/stores/useConsciousness";
 
 export default function Avatar() {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
   const { getActiveField } = useConsciousness();
   
+  // Load the human character model
+  const { scene } = useGLTF('/models/human_character.glb');
+  
   useFrame((state) => {
-    if (!meshRef.current) return;
+    if (!groupRef.current) return;
     
     // Gentle floating animation
-    meshRef.current.rotation.y += 0.01;
-    meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.1;
+    groupRef.current.rotation.y += 0.01;
+    groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 2) * 0.05;
   });
   
   const activeField = getActiveField();
-  const avatarColor = activeField?.avatarColor || '#888888';
   
   return (
-    <group>
-      {/* Main avatar body */}
-      <mesh ref={meshRef} castShadow receiveShadow>
-        <boxGeometry args={[0.8, 1.6, 0.4]} />
-        <meshLambertMaterial color={avatarColor} />
-      </mesh>
-      
-      {/* Avatar head */}
-      <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
-        <sphereGeometry args={[0.3, 16, 16]} />
-        <meshLambertMaterial color={avatarColor} />
-      </mesh>
+    <group ref={groupRef}>
+      {/* Human character model */}
+      <primitive 
+        object={scene.clone()} 
+        scale={[1, 1, 1]}
+        position={[0, 0, 0]}
+        castShadow
+        receiveShadow
+      />
       
       {/* Field-specific aura effect */}
       {activeField && (
-        <mesh position={[0, 0.8, 0]}>
-          <sphereGeometry args={[1.5, 32, 32]} />
+        <mesh position={[0, 1, 0]}>
+          <sphereGeometry args={[1.8, 32, 32]} />
           <meshBasicMaterial
             color={activeField.color}
             transparent
-            opacity={0.1}
+            opacity={0.08}
             side={THREE.DoubleSide}
           />
         </mesh>
@@ -49,20 +49,20 @@ export default function Avatar() {
       {activeField && (
         <>
           <mesh position={[0, 0.2, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.2, 1.4, 32]} />
+            <ringGeometry args={[1.4, 1.6, 32]} />
             <meshBasicMaterial
               color={activeField.particleColor}
               transparent
-              opacity={0.3}
+              opacity={0.25}
               side={THREE.DoubleSide}
             />
           </mesh>
-          <mesh position={[0, 1.4, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[0.8, 1.0, 32]} />
+          <mesh position={[0, 1.8, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[1.0, 1.2, 32]} />
             <meshBasicMaterial
               color={activeField.particleColor}
               transparent
-              opacity={0.2}
+              opacity={0.15}
               side={THREE.DoubleSide}
             />
           </mesh>
@@ -71,3 +71,6 @@ export default function Avatar() {
     </group>
   );
 }
+
+// Preload the model
+useGLTF.preload('/models/human_character.glb');

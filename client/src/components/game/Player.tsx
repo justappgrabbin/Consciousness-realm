@@ -5,6 +5,7 @@ import * as THREE from "three";
 import Avatar from "./Avatar";
 import { useConsciousness } from "../../lib/stores/useConsciousness";
 import { useNPCs } from "../../lib/stores/useNPCs";
+import { useGamepadControls } from "../../hooks/useGamepadControls";
 
 enum Controls {
   forward = 'forward',
@@ -20,6 +21,7 @@ export default function Player() {
   const playerRef = useRef<THREE.Group>(null);
   const velocityRef = useRef(new THREE.Vector3());
   const [subscribe, getState] = useKeyboardControls<Controls>();
+  const gamepadState = useGamepadControls();
   const { camera } = useThree();
   const { activeField, getActiveField, getFieldTraits } = useConsciousness();
   const { startInteraction, npcs } = useNPCs();
@@ -29,35 +31,48 @@ export default function Player() {
   const gravity = -20;
   const groundLevel = 1;
   
-  // Handle interactions
+  // Handle interactions (keyboard and gamepad)
   useEffect(() => {
     const unsubscribeInteract = subscribe(
       (state) => state.interact,
       (pressed) => {
         if (pressed && playerRef.current) {
-          // Check for nearby NPCs
-          const playerPos = playerRef.current.position;
-          const nearbyNPC = npcs.find(npc => {
-            const npcPos = new THREE.Vector3(...npc.position);
-            const distance = playerPos.distanceTo(npcPos);
-            return distance < 3; // Interaction range
-          });
-          
-          if (nearbyNPC) {
-            startInteraction(nearbyNPC.id, activeField);
-            
-            // Gain experience from NPC interactions
-            const { gainExperience } = useConsciousness.getState();
-            gainExperience(activeField, 25);
-            
-            console.log(`Interacting with ${nearbyNPC.name} as ${activeField} - gained 25 XP`);
-          }
+          handleInteraction();
         }
       }
     );
     
     return unsubscribeInteract;
   }, [subscribe, activeField, npcs, startInteraction]);
+  
+  // Handle gamepad interactions
+  useEffect(() => {
+    if (gamepadState.interact && playerRef.current) {
+      handleInteraction();
+    }
+  }, [gamepadState.interact, activeField, npcs, startInteraction]);
+  
+  const handleInteraction = () => {
+    if (!playerRef.current) return;
+    
+    // Check for nearby NPCs
+    const playerPos = playerRef.current.position;
+    const nearbyNPC = npcs.find(npc => {
+      const npcPos = new THREE.Vector3(...npc.position);
+      const distance = playerPos.distanceTo(npcPos);
+      return distance < 3; // Interaction range
+    });
+    
+    if (nearbyNPC) {
+      startInteraction(nearbyNPC.id, activeField);
+      
+      // Gain experience from NPC interactions
+      const { gainExperience } = useConsciousness.getState();
+      gainExperience(activeField, 25);
+      
+      console.log(`Interacting with ${nearbyNPC.name} as ${activeField} - gained 25 XP`);
+    }
+  };
   
   useFrame((state, delta) => {
     if (!playerRef.current) return;

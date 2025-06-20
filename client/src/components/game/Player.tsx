@@ -45,7 +45,12 @@ export default function Player() {
           
           if (nearbyNPC) {
             startInteraction(nearbyNPC.id, activeField);
-            console.log(`Interacting with ${nearbyNPC.name} as ${activeField}`);
+            
+            // Gain experience from NPC interactions
+            const { gainExperience } = useConsciousness.getState();
+            gainExperience(activeField, 25);
+            
+            console.log(`Interacting with ${nearbyNPC.name} as ${activeField} - gained 25 XP`);
           }
         }
       }

@@ -6,6 +6,9 @@ import Game from "./components/game/Game";
 import FieldResonanceHUD from "./components/ui/FieldResonanceHUD";
 import TraitPanel from "./components/ui/TraitPanel";
 import DialogueBox from "./components/ui/DialogueBox";
+import QuestSystem from "./components/ui/QuestSystem";
+import GameInstructions from "./components/ui/GameInstructions";
+import ExperienceNotification from "./components/ui/ExperienceNotification";
 import "@fontsource/inter";
 import "./index.css";
 
@@ -61,6 +64,8 @@ function App() {
           <FieldResonanceHUD />
           <TraitPanel />
           <DialogueBox />
+          <QuestSystem />
+          <GameInstructions />
         </KeyboardControls>
       </div>
     </QueryClientProvider>

@@ -8,9 +8,6 @@ export default function Avatar() {
   const groupRef = useRef<THREE.Group>(null);
   const { getActiveField } = useConsciousness();
   
-  // Load the human character model
-  const { scene } = useGLTF('/models/human_character.glb');
-  
   useFrame((state) => {
     if (!groupRef.current) return;
     
@@ -20,26 +17,53 @@ export default function Avatar() {
   });
   
   const activeField = getActiveField();
+  const avatarColor = activeField?.avatarColor || '#888888';
   
   return (
     <group ref={groupRef}>
-      {/* Human character model */}
-      <primitive 
-        object={scene.clone()} 
-        scale={[1, 1, 1]}
-        position={[0, 0, 0]}
-        castShadow
-        receiveShadow
-      />
+      {/* Stylized humanoid avatar */}
+      <group>
+        {/* Body */}
+        <mesh position={[0, 0, 0]} castShadow receiveShadow>
+          <capsuleGeometry args={[0.3, 1.2, 4, 8]} />
+          <meshLambertMaterial color={avatarColor} />
+        </mesh>
+        
+        {/* Head */}
+        <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
+          <sphereGeometry args={[0.25, 16, 16]} />
+          <meshLambertMaterial color={avatarColor} />
+        </mesh>
+        
+        {/* Arms */}
+        <mesh position={[-0.4, 0.3, 0]} rotation={[0, 0, 0.3]} castShadow>
+          <capsuleGeometry args={[0.12, 0.8, 4, 8]} />
+          <meshLambertMaterial color={avatarColor} />
+        </mesh>
+        <mesh position={[0.4, 0.3, 0]} rotation={[0, 0, -0.3]} castShadow>
+          <capsuleGeometry args={[0.12, 0.8, 4, 8]} />
+          <meshLambertMaterial color={avatarColor} />
+        </mesh>
+        
+        {/* Legs */}
+        <mesh position={[-0.15, -0.8, 0]} castShadow>
+          <capsuleGeometry args={[0.15, 0.9, 4, 8]} />
+          <meshLambertMaterial color={avatarColor} />
+        </mesh>
+        <mesh position={[0.15, -0.8, 0]} castShadow>
+          <capsuleGeometry args={[0.15, 0.9, 4, 8]} />
+          <meshLambertMaterial color={avatarColor} />
+        </mesh>
+      </group>
       
       {/* Field-specific aura effect */}
       {activeField && (
-        <mesh position={[0, 1, 0]}>
-          <sphereGeometry args={[1.8, 32, 32]} />
+        <mesh position={[0, 0.8, 0]}>
+          <sphereGeometry args={[1.5, 32, 32]} />
           <meshBasicMaterial
             color={activeField.color}
             transparent
-            opacity={0.08}
+            opacity={0.1}
             side={THREE.DoubleSide}
           />
         </mesh>
@@ -49,20 +73,20 @@ export default function Avatar() {
       {activeField && (
         <>
           <mesh position={[0, 0.2, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.4, 1.6, 32]} />
+            <ringGeometry args={[1.2, 1.4, 32]} />
             <meshBasicMaterial
               color={activeField.particleColor}
               transparent
-              opacity={0.25}
+              opacity={0.3}
               side={THREE.DoubleSide}
             />
           </mesh>
-          <mesh position={[0, 1.8, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.0, 1.2, 32]} />
+          <mesh position={[0, 1.4, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[0.8, 1.0, 32]} />
             <meshBasicMaterial
               color={activeField.particleColor}
               transparent
-              opacity={0.15}
+              opacity={0.2}
               side={THREE.DoubleSide}
             />
           </mesh>
@@ -71,6 +95,3 @@ export default function Avatar() {
     </group>
   );
 }
-
-// Preload the model
-useGLTF.preload('/models/human_character.glb');

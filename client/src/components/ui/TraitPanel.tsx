@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTraits } from "../../lib/stores/useTraits";
 import { useConsciousness } from "../../lib/stores/useConsciousness";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
@@ -9,6 +10,18 @@ import { X, Star, Clock } from "lucide-react";
 export default function TraitPanel() {
   const { isTraitPanelOpen, toggleTraitPanel, useTrait } = useTraits();
   const { getActiveField, getFieldTraits, energeticSignature } = useConsciousness();
+  
+  // Handle ESC key to close panel
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.code === 'Escape' && isTraitPanelOpen) {
+        toggleTraitPanel();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [isTraitPanelOpen, toggleTraitPanel]);
   
   if (!isTraitPanelOpen) return null;
   

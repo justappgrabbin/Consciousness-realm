@@ -129,11 +129,14 @@ export default function QuestSystem() {
       if (event.code === 'KeyQ') {
         setIsQuestPanelOpen(prev => !prev);
       }
+      if (event.code === 'Escape' && isQuestPanelOpen) {
+        setIsQuestPanelOpen(false);
+      }
     };
     
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [isQuestPanelOpen]);
   
   const completedQuests = quests.filter(q => q.completed).length;
   const totalQuests = quests.length;

@@ -73,7 +73,10 @@ export default function Player() {
       const traits = getFieldTraits(activeFieldData.id);
       const strengthTrait = traits.find(t => t.id.includes('strength') || t.id.includes('agility'));
       if (strengthTrait) {
-        speedMultiplier = strengthTrait.effects.find(e => e.type === 'movement')?.value || 1;
+        const movementEffect = strengthTrait.effects.find(e => e.type === 'movement');
+        if (movementEffect) {
+          speedMultiplier = movementEffect.value;
+        }
       }
     }
     

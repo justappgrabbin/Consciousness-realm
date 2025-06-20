@@ -8,6 +8,8 @@ interface ConsciousnessState {
   switchCooldown: number;
   lastSwitchTime: number;
   energeticSignature: string[];
+  totalExperience: number;
+  questsCompleted: number;
   
   // Actions
   switchField: (fieldId: string) => boolean;
@@ -17,6 +19,9 @@ interface ConsciousnessState {
   canUseField: (fieldId: string) => boolean;
   getActiveField: () => ConsciousnessField | undefined;
   getFieldTraits: (fieldId: string) => any[];
+  unlockField: (fieldId: string) => boolean;
+  checkFieldUnlocks: () => void;
+  completeQuest: (questName: string) => void;
 }
 
 export const useConsciousness = create<ConsciousnessState>()(
@@ -26,6 +31,8 @@ export const useConsciousness = create<ConsciousnessState>()(
     switchCooldown: 30000, // 30 seconds
     lastSwitchTime: 0,
     energeticSignature: ['mind_analysis', 'heart_empathy', 'body_strength'],
+    totalExperience: 0,
+    questsCompleted: 0,
     
     switchField: (fieldId: string) => {
       const state = get();
@@ -54,8 +61,9 @@ export const useConsciousness = create<ConsciousnessState>()(
     },
     
     gainExperience: (fieldId: string, amount: number) => {
-      set((state) => ({
-        fields: state.fields.map(field => {
+      set((state) => {
+        const newTotalExp = state.totalExperience + amount;
+        const updatedFields = state.fields.map(field => {
           if (field.id === fieldId) {
             const newExp = field.experience + amount;
             const newLevel = Math.floor(newExp / 100) + 1;
@@ -66,8 +74,16 @@ export const useConsciousness = create<ConsciousnessState>()(
             };
           }
           return field;
-        })
-      }));
+        });
+        
+        return {
+          fields: updatedFields,
+          totalExperience: newTotalExp
+        };
+      });
+      
+      // Check for field unlocks after gaining experience
+      get().checkFieldUnlocks();
     },
     
     gainTraitExperience: (fieldId: string, traitId: string, amount: number) => {
@@ -124,6 +140,52 @@ export const useConsciousness = create<ConsciousnessState>()(
       
       const signature = get().energeticSignature;
       return field.traits.filter(trait => signature.includes(trait.id));
+    },
+    
+    unlockField: (fieldId: string) => {
+      const state = get();
+      const field = state.fields.find(f => f.id === fieldId);
+      
+      if (!field || field.unlocked) return false;
+      
+      set({
+        fields: state.fields.map(f => 
+          f.id === fieldId ? { ...f, unlocked: true } : f
+        )
+      });
+      
+      console.log(`Unlocked consciousness field: ${field.name}`);
+      return true;
+    },
+    
+    checkFieldUnlocks: () => {
+      const state = get();
+      const { totalExperience, questsCompleted } = state;
+      
+      // Unlock criteria for each field
+      const unlockCriteria = {
+        child: totalExperience >= 500,
+        shadow: totalExperience >= 800 && questsCompleted >= 2,
+        will: totalExperience >= 1200 && questsCompleted >= 3,
+        soul: totalExperience >= 2000 && questsCompleted >= 5,
+        spirit: totalExperience >= 3000 && questsCompleted >= 7,
+        synthesis: totalExperience >= 5000 && questsCompleted >= 10
+      };
+      
+      Object.entries(unlockCriteria).forEach(([fieldId, canUnlock]) => {
+        if (canUnlock) {
+          state.unlockField(fieldId);
+        }
+      });
+    },
+    
+    completeQuest: (questName: string) => {
+      set((state) => ({
+        questsCompleted: state.questsCompleted + 1
+      }));
+      
+      console.log(`Quest completed: ${questName}`);
+      get().checkFieldUnlocks();
     }
   }))
 );

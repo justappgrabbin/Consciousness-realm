@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>Consciousness Fields - 3D Sandbox Game</title>
     <style>
       :root {
@@ -32,6 +35,21 @@
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
         --radius: 0.5rem;
+      }
+      
+      /* Mobile-specific optimizations */
+      body {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        overscroll-behavior: none;
+        touch-action: pan-x pan-y;
+      }
+      
+      /* Prevent pull-to-refresh on mobile */
+      html, body {
+        overscroll-behavior-y: contain;
       }
     </style>
   </head>

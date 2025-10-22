@@ -14,19 +14,19 @@ export default function FieldResonanceHUD() {
   if (!field) return null;
   
   return (
-    <div className="fixed top-4 left-4 z-50 max-w-sm">
+    <div className="fixed top-2 left-2 md:top-4 md:left-4 z-40 w-[calc(100vw-1rem)] sm:w-auto max-w-sm">
       <Card className="bg-black/80 border-2 text-white backdrop-blur-sm" style={{ borderColor: field.color }}>
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3 mb-3">
+        <CardContent className="p-2 sm:p-4">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
             <div
-              className="w-4 h-4 rounded-full"
+              className="w-3 h-3 sm:w-4 sm:h-4 rounded-full flex-shrink-0"
               style={{ backgroundColor: field.color, boxShadow: `0 0 10px ${field.color}` }}
             />
-            <h2 className="text-lg font-bold">{field.name} Field</h2>
-            <Badge variant="secondary">Level {field.level}</Badge>
+            <h2 className="text-sm sm:text-lg font-bold truncate">{field.name} Field</h2>
+            <Badge variant="secondary" className="text-xs">Lv {field.level}</Badge>
           </div>
           
-          <p className="text-sm text-gray-300 mb-3">{field.description}</p>
+          <p className="text-xs sm:text-sm text-gray-300 mb-2 sm:mb-3 line-clamp-2 sm:line-clamp-none">{field.description}</p>
           
           {/* Field Experience */}
           <div className="mb-3">

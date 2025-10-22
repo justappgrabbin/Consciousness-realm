@@ -41,24 +41,24 @@ export default function TraitPanel() {
   };
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden bg-black/90 border-2 text-white" 
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-4">
+      <Card className="w-full h-full sm:h-auto sm:max-w-2xl sm:max-h-[80vh] overflow-hidden bg-black/90 border-0 sm:border-2 text-white sm:rounded-lg" 
             style={{ borderColor: activeField?.color || '#666' }}>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xl">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-6">
+          <CardTitle className="text-lg sm:text-xl">
             {activeField?.name} Field Traits
           </CardTitle>
           <Button
             variant="ghost"
             size="sm"
             onClick={toggleTraitPanel}
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-white/20 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5 sm:h-4 sm:w-4" />
           </Button>
         </CardHeader>
         
-        <CardContent className="overflow-y-auto">
+        <CardContent className="overflow-y-auto px-3 sm:px-6">
           {/* Energetic Signature Info */}
           <div className="mb-4 p-3 bg-blue-900/30 rounded-lg">
             <h3 className="text-sm font-semibold mb-2">Today's Energetic Signature</h3>

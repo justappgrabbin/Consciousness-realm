@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Game from "./components/game/Game";
@@ -10,6 +10,8 @@ import QuestSystem from "./components/ui/QuestSystem";
 import GameInstructions from "./components/ui/GameInstructions";
 import ExperienceNotification from "./components/ui/ExperienceNotification";
 import GamepadHelpOverlay from "./components/ui/GamepadHelpOverlay";
+import TouchControls from "./components/ui/TouchControls";
+import { getDevicePixelRatio, getPerformanceTier } from "./utils/deviceDetection";
 import "@fontsource/inter";
 import "./index.css";
 
@@ -37,12 +39,27 @@ const controls = [
 ];
 
 function App() {
+  const [performanceTier, setPerformanceTier] = useState<'low' | 'medium' | 'high'>('high');
+  const [pixelRatio, setPixelRatio] = useState(1);
+  
+  useEffect(() => {
+    const tier = getPerformanceTier();
+    const ratio = getDevicePixelRatio();
+    setPerformanceTier(tier);
+    setPixelRatio(ratio);
+    console.log(`Performance tier: ${tier}, Pixel ratio: ${ratio}`);
+  }, []);
+  
+  // Performance-based settings
+  const shadows = performanceTier !== 'low';
+  const antialias = performanceTier === 'high';
+  
   return (
     <QueryClientProvider client={queryClient}>
       <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
         <KeyboardControls map={controls}>
           <Canvas
-            shadows
+            shadows={shadows}
             camera={{
               position: [0, 8, 12],
               fov: 45,
@@ -50,9 +67,10 @@ function App() {
               far: 1000
             }}
             gl={{
-              antialias: true,
-              powerPreference: "high-performance"
+              antialias: antialias,
+              powerPreference: performanceTier === 'low' ? "low-power" : "high-performance"
             }}
+            dpr={pixelRatio}
           >
             <color attach="background" args={["#0a0a0f"]} />
             
@@ -69,6 +87,7 @@ function App() {
           <QuestSystem />
           <GameInstructions />
           <GamepadHelpOverlay />
+          <TouchControls />
         </KeyboardControls>
       </div>
     </QueryClientProvider>

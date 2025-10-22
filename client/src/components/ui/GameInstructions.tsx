@@ -37,12 +37,12 @@ export default function GameInstructions() {
   
   if (!isVisible) {
     return (
-      <div className="fixed bottom-4 right-4 z-50">
+      <div className="fixed bottom-16 sm:bottom-4 right-2 sm:right-4 z-40">
         <Button
           onClick={() => setIsVisible(true)}
           variant="outline"
           size="sm"
-          className="bg-black/80 border-white/20 text-white hover:bg-white/20"
+          className="bg-black/80 border-white/20 text-white hover:bg-white/20 min-h-[44px] px-4"
         >
           Help (H)
         </Button>
@@ -51,23 +51,23 @@ export default function GameInstructions() {
   }
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden bg-black/95 border-2 border-blue-500 text-white">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-2xl text-blue-400">
-            Consciousness Fields - Game Guide
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-0 sm:p-4">
+      <Card className="w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[90vh] overflow-hidden bg-black/95 border-0 sm:border-2 sm:border-blue-500 text-white sm:rounded-lg">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4 p-3 sm:p-6">
+          <CardTitle className="text-lg sm:text-2xl text-blue-400">
+            Game Guide
           </CardTitle>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleClose}
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-white/20 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5 sm:h-4 sm:w-4" />
           </Button>
         </CardHeader>
         
-        <CardContent className="overflow-y-auto space-y-6">
+        <CardContent className="overflow-y-auto space-y-4 sm:space-y-6 px-3 sm:px-6 pb-4 sm:pb-6">
           {/* Game Concept */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-blue-300 flex items-center gap-2">

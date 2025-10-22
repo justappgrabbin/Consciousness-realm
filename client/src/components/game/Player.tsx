@@ -1,27 +1,15 @@
 import { useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useKeyboardControls } from "@react-three/drei";
 import * as THREE from "three";
 import Avatar from "./Avatar";
 import { useConsciousness } from "../../lib/stores/useConsciousness";
 import { useNPCs } from "../../lib/stores/useNPCs";
-import { useGamepadControls } from "../../hooks/useGamepadControls";
-
-enum Controls {
-  forward = 'forward',
-  backward = 'backward',
-  leftward = 'leftward',
-  rightward = 'rightward',
-  interact = 'interact',
-  openTraits = 'openTraits',
-  jump = 'jump'
-}
+import { useUnifiedControls, Controls } from "../../hooks/useUnifiedControls";
 
 export default function Player() {
   const playerRef = useRef<THREE.Group>(null);
   const velocityRef = useRef(new THREE.Vector3());
-  const [subscribe, getState] = useKeyboardControls<Controls>();
-  const gamepadState = useGamepadControls();
+  const { subscribe, getControlState, touchState, gamepadState } = useUnifiedControls();
   const { camera } = useThree();
   const { activeField, getActiveField, getFieldTraits } = useConsciousness();
   const { startInteraction, npcs } = useNPCs();
@@ -31,7 +19,7 @@ export default function Player() {
   const gravity = -20;
   const groundLevel = 1;
   
-  // Handle interactions (keyboard and gamepad)
+  // Handle keyboard interactions
   useEffect(() => {
     const unsubscribeInteract = subscribe(
       (state) => state.interact,
@@ -45,12 +33,12 @@ export default function Player() {
     return unsubscribeInteract;
   }, [subscribe, activeField, npcs, startInteraction]);
   
-  // Handle gamepad interactions
+  // Handle gamepad and touch interactions
   useEffect(() => {
-    if (gamepadState.interact && playerRef.current) {
+    if ((gamepadState.interact || touchState.interact) && playerRef.current) {
       handleInteraction();
     }
-  }, [gamepadState.interact, activeField, npcs, startInteraction]);
+  }, [gamepadState.interact, touchState.interact, activeField, npcs, startInteraction]);
   
   const handleInteraction = () => {
     if (!playerRef.current) return;
@@ -77,15 +65,8 @@ export default function Player() {
   useFrame((state, delta) => {
     if (!playerRef.current) return;
     
-    // Combine keyboard and gamepad inputs
-    const keyboardControls = getState();
-    const controls = {
-      forward: keyboardControls.forward || gamepadState.forward,
-      backward: keyboardControls.backward || gamepadState.backward,
-      leftward: keyboardControls.leftward || gamepadState.leftward,
-      rightward: keyboardControls.rightward || gamepadState.rightward,
-      jump: keyboardControls.jump || gamepadState.jump
-    };
+    // Get unified control state from all input sources
+    const controls = getControlState();
     
     const player = playerRef.current;
     const velocity = velocityRef.current;

@@ -9,7 +9,7 @@ import { useUnifiedControls, Controls } from "../../hooks/useUnifiedControls";
 export default function Player() {
   const playerRef = useRef<THREE.Group>(null);
   const velocityRef = useRef(new THREE.Vector3());
-  const { subscribe, getControlState, touchState, gamepadState } = useUnifiedControls();
+  const { subscribe, getControlState, getTouchState, gamepadState } = useUnifiedControls();
   const { camera } = useThree();
   const { activeField, getActiveField, getFieldTraits } = useConsciousness();
   const { startInteraction, npcs } = useNPCs();
@@ -33,12 +33,12 @@ export default function Player() {
     return unsubscribeInteract;
   }, [subscribe, activeField, npcs, startInteraction]);
   
-  // Handle gamepad and touch interactions
+  // Handle gamepad interactions
   useEffect(() => {
-    if ((gamepadState.interact || touchState.interact) && playerRef.current) {
+    if (gamepadState.interact && playerRef.current) {
       handleInteraction();
     }
-  }, [gamepadState.interact, touchState.interact, activeField, npcs, startInteraction]);
+  }, [gamepadState.interact, activeField, npcs, startInteraction]);
   
   const handleInteraction = () => {
     if (!playerRef.current) return;

@@ -30,47 +30,33 @@ export function useUnifiedControls() {
   const [subscribe, getKeyboardState] = useKeyboardControls<Controls>();
   const gamepadState = useGamepadControls();
   
-  // Use shallow comparison to prevent infinite loops
-  const touchForward = useTouchControls((state) => state.forward);
-  const touchBackward = useTouchControls((state) => state.backward);
-  const touchLeftward = useTouchControls((state) => state.leftward);
-  const touchRightward = useTouchControls((state) => state.rightward);
-  const touchInteract = useTouchControls((state) => state.interact);
-  const touchOpenTraits = useTouchControls((state) => state.openTraits);
-  const touchJump = useTouchControls((state) => state.jump);
-  
-  const touchState = {
-    forward: touchForward,
-    backward: touchBackward,
-    leftward: touchLeftward,
-    rightward: touchRightward,
-    interact: touchInteract,
-    openTraits: touchOpenTraits,
-    jump: touchJump
-  };
-  
   /**
    * Get current control state from all input sources
    * Returns true if ANY input method has the control active
+   * Uses getState() directly to avoid hook ordering issues
    */
   const getControlState = (): UnifiedControlState => {
     const keyboard = getKeyboardState();
+    const touch = useTouchControls.getState();
     
     return {
-      forward: keyboard.forward || gamepadState.forward || touchState.forward,
-      backward: keyboard.backward || gamepadState.backward || touchState.backward,
-      leftward: keyboard.leftward || gamepadState.leftward || touchState.leftward,
-      rightward: keyboard.rightward || gamepadState.rightward || touchState.rightward,
-      interact: keyboard.interact || gamepadState.interact || touchState.interact,
-      openTraits: keyboard.openTraits || gamepadState.openTraits || touchState.openTraits,
-      jump: keyboard.jump || gamepadState.jump || touchState.jump
+      forward: keyboard.forward || gamepadState.forward || touch.forward,
+      backward: keyboard.backward || gamepadState.backward || touch.backward,
+      leftward: keyboard.leftward || gamepadState.leftward || touch.leftward,
+      rightward: keyboard.rightward || gamepadState.rightward || touch.rightward,
+      interact: keyboard.interact || gamepadState.interact || touch.interact,
+      openTraits: keyboard.openTraits || gamepadState.openTraits || touch.openTraits,
+      jump: keyboard.jump || gamepadState.jump || touch.jump
     };
   };
+  
+  // Get touch state for reactive effects (outside of useFrame)
+  const getTouchState = () => useTouchControls.getState();
   
   return {
     subscribe,
     getControlState,
-    touchState,
+    getTouchState,
     gamepadState
   };
 }

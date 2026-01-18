@@ -29,15 +29,25 @@ export interface UnifiedControlState {
 export function useUnifiedControls() {
   const [subscribe, getKeyboardState] = useKeyboardControls<Controls>();
   const gamepadState = useGamepadControls();
-  const touchState = useTouchControls((state) => ({
-    forward: state.forward,
-    backward: state.backward,
-    leftward: state.leftward,
-    rightward: state.rightward,
-    interact: state.interact,
-    openTraits: state.openTraits,
-    jump: state.jump
-  }));
+  
+  // Use shallow comparison to prevent infinite loops
+  const touchForward = useTouchControls((state) => state.forward);
+  const touchBackward = useTouchControls((state) => state.backward);
+  const touchLeftward = useTouchControls((state) => state.leftward);
+  const touchRightward = useTouchControls((state) => state.rightward);
+  const touchInteract = useTouchControls((state) => state.interact);
+  const touchOpenTraits = useTouchControls((state) => state.openTraits);
+  const touchJump = useTouchControls((state) => state.jump);
+  
+  const touchState = {
+    forward: touchForward,
+    backward: touchBackward,
+    leftward: touchLeftward,
+    rightward: touchRightward,
+    interact: touchInteract,
+    openTraits: touchOpenTraits,
+    jump: touchJump
+  };
   
   /**
    * Get current control state from all input sources

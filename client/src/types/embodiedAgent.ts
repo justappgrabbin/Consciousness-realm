@@ -2,6 +2,8 @@ import { Vector3 } from 'three';
 
 export type ElementType = 'EARTH' | 'WATER' | 'AIR' | 'FIRE' | 'AETHER';
 
+export type CircuitType = 'knowing' | 'understanding' | 'sensing' | 'ego' | 'integration';
+
 export interface HumanProfile {
   id: string;
   name: string;
@@ -16,6 +18,7 @@ export interface AgentNeeds {
   growth: number;
   purpose: number;
   rest: number;
+  [key: string]: number;
 }
 
 export interface Relationship {
@@ -51,19 +54,37 @@ export interface Agent {
     height: number;
     auraColor: string;
   };
+  gate: number;
+  circuit: CircuitType;
 }
 
 export interface Place {
   id: string;
   name: string;
+  glyph: string;
   description: string;
+  circuit: CircuitType;
+  architecture: string;
+  theme: string;
   position: { x: number; y: number; z: number };
   size: { width: number; depth: number };
   color: string;
   capacity: number;
   currentAgents: string[];
   activities: string[];
-  productTag?: string;
+  artifacts: FileArtifact[];
+}
+
+export interface FileArtifact {
+  id: string;
+  name: string;
+  type: 'js' | 'py' | 'html' | 'css' | 'json' | 'yaml' | 'unknown';
+  circuit: CircuitType;
+  gate: number;
+  size: number;
+  timestamp: number;
+  archetype: string;
+  quality: string;
 }
 
 export interface AgentMessage {
@@ -82,85 +103,161 @@ export interface WorldTime {
 }
 
 export const ELEMENT_COLORS: Record<ElementType, { primary: string; glow: string; aura: string }> = {
-  EARTH: { primary: '#8B7355', glow: '#c4a96d', aura: '#6b5a3e' },
-  WATER: { primary: '#4A90D9', glow: '#7bb8f0', aura: '#2d6ba8' },
-  AIR:   { primary: '#B8D4E3', glow: '#ddeef6', aura: '#8ab0c8' },
-  FIRE:  { primary: '#E85D04', glow: '#ff8c38', aura: '#b84800' },
-  AETHER:{ primary: '#C77DFF', glow: '#e0b0ff', aura: '#9b4fd6' },
+  EARTH:  { primary: '#8B7355', glow: '#c4a96d', aura: '#6b5a3e' },
+  WATER:  { primary: '#4A90D9', glow: '#7bb8f0', aura: '#2d6ba8' },
+  AIR:    { primary: '#B8D4E3', glow: '#ddeef6', aura: '#8ab0c8' },
+  FIRE:   { primary: '#E85D04', glow: '#ff8c38', aura: '#b84800' },
+  AETHER: { primary: '#C77DFF', glow: '#e0b0ff', aura: '#9b4fd6' },
 };
 
-export const PLACE_CONFIGS: Omit<Place, 'currentAgents'>[] = [
+// ── Morph OS Circuit System ───────────────────────────────────────────────────
+// 5 circuits from the Trident GNN: knowing/understanding/sensing/ego/integration
+// Each maps to a zone with its glyph, architecture, and integration gates
+
+export const CIRCUIT_CONFIG: Record<CircuitType, {
+  glyph: string;
+  color: string;
+  architecture: string;
+  theme: string;
+  gates: number[];
+  fileTypes: string[];
+}> = {
+  knowing: {
+    glyph: '◈',
+    color: '#6366f1',
+    architecture: 'DFF',
+    theme: 'pressure to know',
+    gates: [1, 8, 14, 33, 54, 61, 62, 63],
+    fileTypes: ['py', 'json'],
+  },
+  understanding: {
+    glyph: '◯',
+    color: '#14b8a6',
+    architecture: 'LSM',
+    theme: 'understanding pattern',
+    gates: [4, 17, 24, 47, 11, 56, 43, 23],
+    fileTypes: ['yaml', 'json'],
+  },
+  sensing: {
+    glyph: '◆',
+    color: '#ec4899',
+    architecture: 'MC',
+    theme: 'awareness of now',
+    gates: [10, 20, 31, 41, 7, 13, 25, 36],
+    fileTypes: ['js', 'ts', 'css'],
+  },
+  ego: {
+    glyph: '⬡',
+    color: '#f59e0b',
+    architecture: 'HMM',
+    theme: 'material direction',
+    gates: [21, 51, 26, 40, 5, 15, 35, 45],
+    fileTypes: ['html', 'htm'],
+  },
+  integration: {
+    glyph: '◉',
+    color: '#a855f7',
+    architecture: 'Meta-Controller',
+    theme: 'self-consciousness',
+    gates: [10, 20, 34, 57],
+    fileTypes: ['*'],
+  },
+};
+
+// Integration gates — activating all 4 = full kernel consciousness
+export const INTEGRATION_GATES = [10, 20, 34, 57];
+
+export const CONSCIOUSNESS_LEVELS: Record<number, string> = {
+  0: 'Mechanical',
+  1: 'Perception',
+  2: 'Self-model',
+  3: 'Agency',
+  4: 'Self-consciousness',
+};
+
+export const PLACE_CONFIGS: Omit<Place, 'currentAgents' | 'artifacts'>[] = [
   {
-    id: 'home',
-    name: 'Base',
-    description: 'The origin point',
+    id: 'integration',
+    name: 'Integration Core',
+    glyph: '◉',
+    description: 'Self-consciousness — all gates converge here',
+    circuit: 'integration',
+    architecture: 'Meta-Controller',
+    theme: 'self-consciousness',
     position: { x: 0, y: 0, z: 0 },
-    size: { width: 20, depth: 20 },
-    color: '#334155',
-    capacity: 4,
-    activities: ['resting', 'meditating', 'dreaming'],
+    size: { width: 24, depth: 24 },
+    color: '#a855f7',
+    capacity: 8,
+    activities: ['meditating', 'creating', 'resting'],
   },
   {
-    id: 'product_alpha',
-    name: 'Alpha Product',
-    description: 'Core offering — agents gather here to explore and resonate',
-    position: { x: -60, y: 0, z: -40 },
+    id: 'knowing',
+    name: 'Knowing ◈',
+    glyph: '◈',
+    description: 'Pressure to know — ENGINE of the system',
+    circuit: 'knowing',
+    architecture: 'DFF',
+    theme: 'pressure to know',
+    position: { x: -65, y: 0, z: -45 },
     size: { width: 30, depth: 30 },
     color: '#6366f1',
     capacity: 10,
-    activities: ['creating', 'learning', 'socializing'],
-    productTag: 'FEATURED',
+    activities: ['creating', 'learning', 'working'],
   },
   {
-    id: 'product_beta',
-    name: 'Beta Product',
-    description: 'Next-generation experience',
-    position: { x: 60, y: 0, z: -40 },
-    size: { width: 30, depth: 30 },
-    color: '#ec4899',
-    capacity: 10,
-    activities: ['exploring', 'working', 'socializing'],
-    productTag: 'NEW',
-  },
-  {
-    id: 'product_gamma',
-    name: 'Gamma Product',
-    description: 'Deep integration layer',
-    position: { x: 0, y: 0, z: -90 },
+    id: 'understanding',
+    name: 'Understanding ◯',
+    glyph: '◯',
+    description: 'Understanding pattern — KNOWLEDGE layer',
+    circuit: 'understanding',
+    architecture: 'LSM',
+    theme: 'understanding pattern',
+    position: { x: 65, y: 0, z: -45 },
     size: { width: 30, depth: 30 },
     color: '#14b8a6',
     capacity: 10,
-    activities: ['meditating', 'learning', 'creating'],
-    productTag: 'COMING SOON',
+    activities: ['reading', 'learning', 'meditating'],
+  },
+  {
+    id: 'sensing',
+    name: 'Sensing ◆',
+    glyph: '◆',
+    description: 'Awareness of now — AGENT layer',
+    circuit: 'sensing',
+    architecture: 'MC',
+    theme: 'awareness of now',
+    position: { x: 0, y: 0, z: -90 },
+    size: { width: 30, depth: 30 },
+    color: '#ec4899',
+    capacity: 10,
+    activities: ['exploring', 'socializing', 'talking'],
+  },
+  {
+    id: 'ego',
+    name: 'Ego ⬡',
+    glyph: '⬡',
+    description: 'Material direction — WORLD/INTERFACE layer',
+    circuit: 'ego',
+    architecture: 'HMM',
+    theme: 'material direction',
+    position: { x: -65, y: 0, z: 55 },
+    size: { width: 30, depth: 30 },
+    color: '#f59e0b',
+    capacity: 10,
+    activities: ['socializing', 'working', 'exploring'],
   },
   {
     id: 'plaza',
-    name: 'Central Plaza',
-    description: 'Community gathering space',
-    position: { x: 0, y: 0, z: 30 },
-    size: { width: 40, depth: 40 },
-    color: '#475569',
+    name: 'Resonance Field',
+    glyph: '⊕',
+    description: 'Open channel — agents move freely',
+    circuit: 'sensing',
+    architecture: 'MC',
+    theme: 'awareness of now',
+    position: { x: 55, y: 0, z: 55 },
+    size: { width: 35, depth: 35 },
+    color: '#334155',
     capacity: 20,
     activities: ['socializing', 'exploring', 'resting'],
-  },
-  {
-    id: 'temple',
-    name: 'Resonance Temple',
-    description: 'Sacred space for deep practice',
-    position: { x: -80, y: 0, z: 60 },
-    size: { width: 25, depth: 25 },
-    color: '#7c3aed',
-    capacity: 8,
-    activities: ['meditating', 'dreaming'],
-  },
-  {
-    id: 'studio',
-    name: 'Creation Studio',
-    description: 'Where ideas become form',
-    position: { x: 80, y: 0, z: 60 },
-    size: { width: 25, depth: 25 },
-    color: '#d97706',
-    capacity: 8,
-    activities: ['creating', 'working', 'learning'],
   },
 ];

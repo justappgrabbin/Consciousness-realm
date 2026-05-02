@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { embodiedWorldEngine, classifyFile } from '../engine/EmbodiedWorldEngine';
+import { embodiedWorldEngine, ingestFileWithKernel } from '../engine/EmbodiedWorldEngine';
+import { morphKernel } from '../engine/MorphKernel';
+import type { KernelState, ChannelInstance, RoutePath } from '../engine/MorphKernel';
 import { World3D } from '../components/world/World3D';
 import type { Agent, HumanProfile, FileArtifact } from '../types/embodiedAgent';
-import { ELEMENT_COLORS, CIRCUIT_CONFIG, CONSCIOUSNESS_LEVELS, INTEGRATION_GATES, PLACE_CONFIGS } from '../types/embodiedAgent';
+import { ELEMENT_COLORS, CIRCUIT_CONFIG, CONSCIOUSNESS_LEVELS, INTEGRATION_GATES } from '../types/embodiedAgent';
 
 // ── Inline SVG Icons ──────────────────────────────────────────────────────────
 const Icon = {
@@ -115,7 +117,7 @@ function ConsciousnessMeter({ level, activeGates }: { level: number; activeGates
   );
 }
 
-// ── File Drop Zone ────────────────────────────────────────────────────────────
+// ── File Drop Zone (reads real content → CPG parser) ──────────────────────────
 function FileDropZone({
   onIngest,
   recentArtifacts,
@@ -123,19 +125,26 @@ function FileDropZone({
   onIngest: (artifact: FileArtifact) => void;
   recentArtifacts: FileArtifact[];
 }) {
-  const [dragging, setDragging] = useState(false);
+  const [dragging, setDragging]     = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [lastCPG, setLastCPG]       = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processFiles = useCallback(
     async (files: FileList | File[]) => {
       setProcessing(true);
-      const arr = Array.from(files);
-      for (const file of arr) {
-        const classified = classifyFile(file.name, file.size);
-        const artifact = embodiedWorldEngine.ingestArtifact(classified);
+      for (const file of Array.from(files)) {
+        const { artifact, kernelArtifact } = await ingestFileWithKernel(file);
+        embodiedWorldEngine.ingestArtifact(artifact);
         onIngest(artifact);
-        await new Promise(r => setTimeout(r, 120));
+        // Show CPG summary for last file
+        setLastCPG(
+          `${kernelArtifact.cpg.nodes.length} nodes · ` +
+          `cyclomatic=${kernelArtifact.cpg.complexity.cyclomatic} · ` +
+          `confidence=${kernelArtifact.confidence}% · ` +
+          `intent=[${kernelArtifact.contract.intent}]`
+        );
+        await new Promise(r => setTimeout(r, 80));
       }
       setProcessing(false);
     },
@@ -155,42 +164,42 @@ function FileDropZone({
     <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
       <p className="mb-3 text-[10px] font-medium tracking-widest text-white/30">INGEST ARTIFACTS</p>
 
-      {/* Drop target */}
       <div
         className="relative mb-3 cursor-pointer rounded-xl border-2 border-dashed p-4 text-center transition-all"
         style={{
           borderColor: dragging ? '#a855f7' : 'rgba(255,255,255,0.08)',
-          background: dragging ? 'rgba(168,85,247,0.08)' : 'transparent',
+          background:  dragging ? 'rgba(168,85,247,0.08)' : 'transparent',
         }}
         onDragOver={e => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         onClick={() => fileInputRef.current?.click()}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
+        <input ref={fileInputRef} type="file" multiple
           accept=".js,.ts,.jsx,.tsx,.py,.html,.htm,.css,.json,.yaml,.yml"
           className="hidden"
-          onChange={e => e.target.files && processFiles(e.target.files)}
-        />
-        <div className="mb-1 flex justify-center text-white/20">
-          <Icon.Upload />
-        </div>
-        {processing ? (
-          <p className="text-xs text-purple-400 animate-pulse">Processing…</p>
-        ) : (
-          <>
-            <p className="text-xs text-white/40">Drop files or click</p>
-            <p className="mt-0.5 text-[10px] text-white/20">js · py · html · css · json · yaml</p>
-          </>
-        )}
+          onChange={e => e.target.files && processFiles(e.target.files)} />
+        <div className="mb-1 flex justify-center text-white/20"><Icon.Upload /></div>
+        {processing
+          ? <p className="text-xs text-purple-400 animate-pulse">Parsing CPG…</p>
+          : <>
+              <p className="text-xs text-white/40">Drop files or click</p>
+              <p className="mt-0.5 text-[10px] text-white/20">js · ts · py · html · css · json · yaml</p>
+            </>
+        }
       </div>
+
+      {/* CPG analysis summary */}
+      {lastCPG && (
+        <div className="mb-2 rounded-lg border border-white/5 bg-black/30 px-2.5 py-2">
+          <p className="text-[9px] font-medium text-white/20 mb-0.5">LAST CPG ANALYSIS</p>
+          <p className="text-[10px] text-white/40 font-mono leading-relaxed">{lastCPG}</p>
+        </div>
+      )}
 
       {/* Recent artifacts */}
       {recentArtifacts.length > 0 && (
-        <div className="space-y-1.5 max-h-40 overflow-y-auto">
+        <div className="space-y-1.5 max-h-36 overflow-y-auto">
           {recentArtifacts.slice(-6).reverse().map(a => {
             const cfg = CIRCUIT_CONFIG[a.circuit];
             return (
@@ -200,7 +209,8 @@ function FileDropZone({
                   <p className="truncate text-xs text-white/70">{a.name}</p>
                   <p className="text-[10px] text-white/30">{a.circuit} · Gate {a.gate}</p>
                 </div>
-                <span className="text-[9px] uppercase font-medium rounded px-1 py-0.5" style={{ background: `${cfg.color}20`, color: cfg.color }}>
+                <span className="text-[9px] uppercase font-medium rounded px-1 py-0.5"
+                  style={{ background: `${cfg.color}20`, color: cfg.color }}>
                   {a.type}
                 </span>
               </div>
@@ -240,6 +250,174 @@ function CircuitLegend({ places }: { places: { id: string; name: string; color: 
           );
         })}
       </div>
+    </div>
+  );
+}
+
+// ── Kernel State Panel ────────────────────────────────────────────────────────
+// Shows real computational state: channels, routes, architecture readouts
+function KernelStatePanel({ kernelState }: { kernelState: KernelState }) {
+  const [tab, setTab] = useState<'channels' | 'arches' | 'routes' | 'log'>('channels');
+
+  const LEVEL_COLOR: Record<string, string> = {
+    info:    'text-white/30',
+    warn:    'text-yellow-400/60',
+    gate:    'text-indigo-400/70',
+    channel: 'text-purple-400/70',
+    route:   'text-teal-400/70',
+  };
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <p className="mb-2 text-[10px] font-medium tracking-widest text-white/30">KERNEL STATE</p>
+
+      {/* Tabs */}
+      <div className="mb-3 flex rounded-lg border border-white/5 bg-black/20 p-0.5">
+        {(['channels', 'arches', 'routes', 'log'] as const).map(t => (
+          <button key={t} onClick={() => setTab(t)}
+            className={`flex-1 rounded-md py-1 text-[9px] uppercase font-medium transition ${tab === t ? 'bg-white/10 text-white' : 'text-white/30 hover:text-white/50'}`}>
+            {t}
+          </button>
+        ))}
+      </div>
+
+      {/* Channels tab — formed gate pairs */}
+      {tab === 'channels' && (
+        <div className="space-y-1.5 max-h-48 overflow-y-auto">
+          {kernelState.activeChannels.length === 0
+            ? <p className="py-3 text-center text-[10px] text-white/20">No channels formed yet<br/>Activate gate pairs to form channels</p>
+            : kernelState.activeChannels.map(ch => {
+                const circuitCfg = CIRCUIT_CONFIG[ch.circuit as keyof typeof CIRCUIT_CONFIG];
+                return (
+                  <div key={ch.name} className="rounded-lg border border-white/5 bg-black/20 px-2.5 py-2">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-[10px] font-medium text-white/60">{ch.name}</span>
+                      <span className="text-[9px] rounded px-1 py-0.5 font-mono"
+                        style={{ background: `${circuitCfg?.color || '#666'}20`, color: circuitCfg?.color || '#aaa' }}>
+                        {ch.architecture}
+                      </span>
+                    </div>
+                    <p className="text-[9px] text-white/30 mb-1">{ch.description}</p>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[9px] font-mono text-white/20">Gates</span>
+                      {ch.gates.map(g => (
+                        <span key={g} className="rounded border border-white/10 px-1 text-[9px] font-mono"
+                          style={{ color: INTEGRATION_GATES.includes(g) ? '#a855f7' : 'rgba(255,255,255,0.4)' }}>
+                          {g}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })
+          }
+        </div>
+      )}
+
+      {/* Architecture readouts */}
+      {tab === 'arches' && (
+        <div className="space-y-2 max-h-48 overflow-y-auto">
+          {/* DFF */}
+          <div className="rounded-lg border border-indigo-500/10 bg-indigo-500/5 px-2.5 py-2">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[9px] font-medium text-indigo-400">DFF — Knowing</span>
+              <span className="text-[9px] text-white/30">{kernelState.dff.activations} activations</span>
+            </div>
+            <div className="flex gap-1 flex-wrap">
+              {kernelState.dff.state.map((v, i) => (
+                <div key={i} className="w-4 overflow-hidden rounded-sm bg-white/5" style={{ height: 20 }}>
+                  <div className="w-full rounded-sm bg-indigo-500/70 transition-all" style={{ height: `${Math.abs(v) * 100}%`, marginTop: 'auto' }} />
+                </div>
+              ))}
+            </div>
+            <p className="mt-1 text-[9px] font-mono text-white/20">W‖={kernelState.dff.weightNorm.toFixed(3)}</p>
+          </div>
+
+          {/* LSM */}
+          <div className="rounded-lg border border-teal-500/10 bg-teal-500/5 px-2.5 py-2">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[9px] font-medium text-teal-400">LSM — Understanding</span>
+              <span className="text-[9px] text-white/30">{kernelState.lsm.updates} updates</span>
+            </div>
+            <div className="relative h-6 overflow-hidden rounded bg-white/5">
+              {kernelState.lsm.history.slice(-32).map((v, i, arr) => (
+                <div key={i} className="absolute bottom-0 w-1 rounded-sm bg-teal-400/60 transition-all"
+                  style={{ left: `${(i / arr.length) * 100}%`, height: `${Math.abs(v) * 100}%` }} />
+              ))}
+            </div>
+            <p className="mt-1 text-[9px] font-mono text-white/20">readout={kernelState.lsm.readout.toFixed(4)}</p>
+          </div>
+
+          {/* MC */}
+          <div className="rounded-lg border border-pink-500/10 bg-pink-500/5 px-2.5 py-2">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[9px] font-medium text-pink-400">MC — Sensing</span>
+              <span className="text-[9px] text-white/30">{kernelState.mc.transitions} transitions</span>
+            </div>
+            <p className="text-[9px] font-mono text-white/40">
+              state=<span className="text-pink-300">{kernelState.mc.currentState}</span>
+            </p>
+            <p className="text-[9px] font-mono text-white/30">
+              predict→<span className="text-pink-400">{kernelState.mc.nextPrediction}</span>
+            </p>
+          </div>
+
+          {/* HMM */}
+          <div className="rounded-lg border border-amber-500/10 bg-amber-500/5 px-2.5 py-2">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[9px] font-medium text-amber-400">HMM — Ego</span>
+              <span className="text-[9px] text-white/30">H={kernelState.hmm.entropy.toFixed(2)}</span>
+            </div>
+            <p className="text-[9px] font-mono text-white/40">
+              identity=<span className="text-amber-300">{kernelState.hmm.state}</span>
+            </p>
+            <div className="mt-1 flex gap-0.5">
+              {kernelState.hmm.belief.map((p, i) => (
+                <div key={i} className="flex-1 overflow-hidden rounded-sm bg-white/5" style={{ height: 8 }}>
+                  <div className="h-full rounded-sm bg-amber-500/60 transition-all" style={{ width: `${p * 100}%` }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Routes tab */}
+      {tab === 'routes' && (
+        <div className="space-y-1 max-h-48 overflow-y-auto">
+          {kernelState.routeHistory.length === 0
+            ? <p className="py-3 text-center text-[10px] text-white/20">No routes yet</p>
+            : kernelState.routeHistory.slice(-12).reverse().map((r: RoutePath, i) => (
+                <div key={i} className="flex items-center gap-1.5 rounded-lg bg-black/20 px-2 py-1.5">
+                  <span className="text-[9px] font-mono"
+                    style={{ color: CIRCUIT_CONFIG[r.source]?.color || '#888' }}>{r.source.slice(0,3)}</span>
+                  {r.integrated
+                    ? <>
+                        <span className="text-[9px] text-white/20">→</span>
+                        <span className="text-[9px] font-mono text-purple-400">[{r.gate}]</span>
+                        <span className="text-[9px] text-white/20">→</span>
+                      </>
+                    : <span className="text-[9px] text-white/20">⇒</span>
+                  }
+                  <span className="text-[9px] font-mono"
+                    style={{ color: CIRCUIT_CONFIG[r.target]?.color || '#888' }}>{r.target.slice(0,3)}</span>
+                </div>
+              ))
+          }
+        </div>
+      )}
+
+      {/* Log tab */}
+      {tab === 'log' && (
+        <div className="space-y-0.5 max-h-48 overflow-y-auto font-mono">
+          {kernelState.log.slice(-20).reverse().map((entry, i) => (
+            <div key={i} className="text-[9px] leading-relaxed">
+              <span className="text-white/15">[{entry.module}]</span>{' '}
+              <span className={LEVEL_COLOR[entry.level] || 'text-white/30'}>{entry.message}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -431,6 +609,7 @@ export default function AgentWorld() {
   const [consciousnessLevel, setConsciousnessLevel] = useState(0);
   const [recentArtifacts, setRecentArtifacts] = useState<FileArtifact[]>([]);
   const [showIngest, setShowIngest] = useState(false);
+  const [kernelState, setKernelState] = useState<KernelState>(() => morphKernel.getState());
 
   useEffect(() => {
     engine.start();
@@ -440,13 +619,14 @@ export default function AgentWorld() {
       setPlaces(Array.from(engine.places.values()));
       setActiveGates(new Set(engine.activeGates));
       setConsciousnessLevel(engine.consciousnessLevel);
+      setKernelState(morphKernel.getState());
     });
 
     const seeds: HumanProfile[] = [
-      { id: 'seed_0', name: 'Alex',   birthday: '1990-03-15', intentions: ['growth'],     values: ['authenticity'] },
-      { id: 'seed_1', name: 'Jordan', birthday: '1985-07-22', intentions: ['connection'],  values: ['creativity'] },
-      { id: 'seed_2', name: 'River',  birthday: '1995-11-08', intentions: ['purpose'],     values: ['growth'] },
-      { id: 'seed_3', name: 'Sage',   birthday: '1988-01-30', intentions: ['wisdom'],      values: ['truth'] },
+      { id: 'seed_0', name: 'Alex',   birthday: '1990-03-15', intentions: ['growth'],    values: ['authenticity'] },
+      { id: 'seed_1', name: 'Jordan', birthday: '1985-07-22', intentions: ['connection'], values: ['creativity'] },
+      { id: 'seed_2', name: 'River',  birthday: '1995-11-08', intentions: ['purpose'],    values: ['growth'] },
+      { id: 'seed_3', name: 'Sage',   birthday: '1988-01-30', intentions: ['wisdom'],     values: ['truth'] },
     ];
     seeds.forEach(s => engine.createAgent(s));
 
@@ -465,6 +645,7 @@ export default function AgentWorld() {
 
   function handleIngest(artifact: FileArtifact) {
     setRecentArtifacts(prev => [...prev, artifact]);
+    setKernelState(morphKernel.getState());
   }
 
   return (
@@ -485,19 +666,23 @@ export default function AgentWorld() {
         <div className="flex items-center gap-6 text-xs text-white/40">
           <div className="flex items-center gap-1.5"><Icon.Users /><span>{agentCount} agents</span></div>
           <div className="flex items-center gap-1.5"><Icon.Clock />
-            <span>Day {engine.time.day} &nbsp;{String(engine.time.hour).padStart(2,'0')}:{String(engine.time.minute).padStart(2,'0')}</span>
+            <span>Day {engine.time.day}&nbsp;{String(engine.time.hour).padStart(2,'0')}:{String(engine.time.minute).padStart(2,'0')}</span>
           </div>
-          {/* Consciousness badge */}
           <div className="flex items-center gap-1.5">
             <Icon.Zap />
             <span style={{ color: ['#334155','#6366f1','#14b8a6','#ec4899','#a855f7'][consciousnessLevel] }}>
               {CONSCIOUSNESS_LEVELS[consciousnessLevel]}
             </span>
           </div>
+          {/* Live channel count */}
+          {kernelState.activeChannels.length > 0 && (
+            <div className="flex items-center gap-1 rounded-full border border-purple-500/20 bg-purple-500/10 px-2 py-0.5">
+              <span className="text-[10px] text-purple-400">{kernelState.activeChannels.length} channels</span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Ingest toggle */}
           <button
             onClick={() => setShowIngest(s => !s)}
             className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs transition ${showIngest ? 'border-purple-500/40 bg-purple-500/15 text-purple-300' : 'border-white/10 bg-white/5 text-white/40 hover:text-white/60'}`}
@@ -505,7 +690,6 @@ export default function AgentWorld() {
             <Icon.Upload /><span>Ingest</span>
           </button>
 
-          {/* Camera mode */}
           <div className="flex rounded-lg border border-white/10 bg-white/5 p-0.5">
             {(['orbit', 'follow', 'pov'] as const).map(m => (
               <button key={m} onClick={() => setCameraMode(m)}
@@ -533,10 +717,8 @@ export default function AgentWorld() {
         {/* Left Sidebar */}
         <aside className="z-20 flex w-64 flex-col gap-3 overflow-y-auto border-r border-white/[0.06] bg-black/40 p-3 backdrop-blur-sm">
 
-          {/* Consciousness Meter */}
           <ConsciousnessMeter level={consciousnessLevel} activeGates={activeGates} />
 
-          {/* My Agent */}
           {myAgent ? (
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="mb-2 text-[10px] font-medium tracking-widest text-white/30">YOUR EXTENSION</p>
@@ -575,23 +757,27 @@ export default function AgentWorld() {
             </div>
           )}
 
-          {/* Ingest panel (collapsible) */}
           {showIngest && (
             <FileDropZone onIngest={handleIngest} recentArtifacts={recentArtifacts} />
           )}
 
-          {/* Circuit legend */}
           <CircuitLegend places={places} />
 
-          {/* Messages */}
+          {/* Kernel State — real computational readout */}
+          <KernelStatePanel kernelState={kernelState} />
+
+          {/* Agent messages */}
           {myMessages.length > 0 && (
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="mb-2 flex items-center gap-1.5 text-[10px] font-medium tracking-widest text-white/30">
-                <Icon.Msg /> KERNEL LOG
+                <Icon.Msg /> MESSAGES
               </p>
               <div className="space-y-2 max-h-36 overflow-y-auto">
                 {myMessages.slice(-5).reverse().map((m, i) => (
-                  <p key={i} className="text-xs italic text-white/50 leading-relaxed">"{m.content}"</p>
+                  <div key={i} className="rounded-lg bg-black/20 px-2.5 py-2">
+                    <p className="text-[10px] text-white/50 leading-relaxed">{m.content}</p>
+                    <p className="mt-0.5 text-[9px] text-white/20 font-mono">{m.context}</p>
+                  </div>
                 ))}
               </div>
             </div>
@@ -607,7 +793,6 @@ export default function AgentWorld() {
             cameraMode={cameraMode}
           />
 
-          {/* Agent Panel */}
           {selectedAgent && (
             <div className="absolute right-4 top-4 z-20">
               <AgentPanel
@@ -619,7 +804,6 @@ export default function AgentWorld() {
             </div>
           )}
 
-          {/* Bottom hint */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
             <p className="rounded-full border border-white/10 bg-black/60 px-4 py-1.5 text-[11px] text-white/30 backdrop-blur-sm">
               Click agents to inspect · Drag to orbit · Drop files to ingest

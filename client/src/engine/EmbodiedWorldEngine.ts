@@ -16,6 +16,7 @@ import {
   CIRCUIT_CONFIG,
   INTEGRATION_GATES,
 } from '../types/embodiedAgent';
+import { morphKernel, type KernelState, type KernelArtifact } from './MorphKernel';
 
 const WALK_SPEED = 0.12;
 
@@ -28,33 +29,22 @@ const NEEDS_DECAY: Record<string, number> = {
 };
 
 const ACTIVITY_EFFECTS: Record<string, Partial<Record<string, number>>> = {
-  resting:    { energy: 0.8,  rest: 1.5 },
-  meditating: { energy: 0.3,  purpose: 0.8, rest: 0.8 },
-  reading:    { growth: 1.2,  energy: -0.2 },
-  creating:   { growth: 1.5,  purpose: 0.8, energy: -0.5 },
-  socializing:{ connection: 1.5, energy: -0.3 },
-  exploring:  { growth: 0.8,  energy: -0.4 },
-  learning:   { growth: 1.2,  energy: -0.3 },
-  working:    { purpose: 0.6, energy: -0.5 },
-  dreaming:   { rest: 0.8,    purpose: 0.4 },
-  talking:    { connection: 1.2, energy: -0.2 },
+  resting:     { energy: 0.8,  rest: 1.5 },
+  meditating:  { energy: 0.3,  purpose: 0.8, rest: 0.8 },
+  reading:     { growth: 1.2,  energy: -0.2 },
+  creating:    { growth: 1.5,  purpose: 0.8, energy: -0.5 },
+  socializing: { connection: 1.5, energy: -0.3 },
+  exploring:   { growth: 0.8,  energy: -0.4 },
+  learning:    { growth: 1.2,  energy: -0.3 },
+  working:     { purpose: 0.6, energy: -0.5 },
+  dreaming:    { rest: 0.8,    purpose: 0.4 },
+  talking:     { connection: 1.2, energy: -0.2 },
 };
 
-// ── Gate → Circuit mapping from Trident GNN ──────────────────────────────────
-const GATE_CIRCUIT: Record<number, CircuitType> = {};
-for (const [circuit, cfg] of Object.entries(CIRCUIT_CONFIG)) {
-  for (const gate of cfg.gates) {
-    GATE_CIRCUIT[gate] = circuit as CircuitType;
-  }
-}
-
+// ── Gate → Circuit from kernel config ────────────────────────────────────────
 function pickGate(birthday: string): number {
   const d = new Date(birthday);
   return ((d.getMonth() * 5 + d.getDate()) % 64) + 1;
-}
-
-function gateToCircuit(gate: number): CircuitType {
-  return GATE_CIRCUIT[gate] || 'integration';
 }
 
 // 64 I-Ching archetypes
@@ -69,33 +59,27 @@ const ARCHETYPES = [
   'penetrating','joyous','dispersion','limitation','centering','transitioning','completing','incompleting',
 ];
 
-// ── Morph File Classifier ─────────────────────────────────────────────────────
-export function classifyFile(name: string, size: number): Omit<FileArtifact, 'id' | 'timestamp'> {
+// ── Legacy file classifier (for FileArtifact type, UI-facing) ────────────────
+export function classifyFile(name: string, _size: number): Omit<FileArtifact, 'id' | 'timestamp'> {
   const ext = name.split('.').pop()?.toLowerCase() || 'unknown';
   const lname = name.toLowerCase();
 
   let circuit: CircuitType = 'integration';
   let gate = 10;
 
-  // Classify by extension + name keywords (mirrors morph-os-kernel logic)
   if (['py'].includes(ext)) {
-    circuit = 'knowing';
-    gate = 1;
+    circuit = 'knowing'; gate = 1;
   } else if (['yaml', 'yml'].includes(ext)) {
-    circuit = 'understanding';
-    gate = 4;
+    circuit = 'understanding'; gate = 4;
   } else if (['js', 'ts', 'jsx', 'tsx'].includes(ext)) {
-    // Further classify by name
     if (lname.includes('agent') || lname.includes('bot')) { circuit = 'sensing'; gate = 13; }
     else if (lname.includes('kernel') || lname.includes('engine')) { circuit = 'knowing'; gate = 14; }
     else if (lname.includes('ui') || lname.includes('component') || lname.includes('app')) { circuit = 'ego'; gate = 35; }
     else { circuit = 'sensing'; gate = 20; }
   } else if (['html', 'htm'].includes(ext)) {
-    circuit = 'ego';
-    gate = 45;
+    circuit = 'ego'; gate = 45;
   } else if (['css', 'scss', 'sass'].includes(ext)) {
-    circuit = 'sensing';
-    gate = 10;
+    circuit = 'sensing'; gate = 10;
   } else if (['json'].includes(ext)) {
     if (lname.includes('kernel') || lname.includes('trident')) { circuit = 'knowing'; gate = 63; }
     else { circuit = 'understanding'; gate = 47; }
@@ -105,39 +89,83 @@ export function classifyFile(name: string, size: number): Omit<FileArtifact, 'id
   const archetype = ARCHETYPES[(gate - 1) % 64];
   const quality = gate % 2 === 0 ? 'yielding' : 'initiating';
 
-  return { name, type, circuit, gate, size, archetype, quality };
+  return { name, type, circuit, gate, size: _size, archetype, quality };
+}
+
+// ── Full kernel-powered ingest (reads actual file content) ────────────────────
+export async function ingestFileWithKernel(file: File): Promise<{
+  artifact: FileArtifact;
+  kernelArtifact: KernelArtifact;
+}> {
+  const content = await file.text();
+  const kernelArtifact = morphKernel.ingestArtifact(file.name, content, file.size);
+
+  // Map to FileArtifact for display layer
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'unknown';
+  const type = (['js','py','html','css','json','yaml'].includes(ext) ? ext : 'unknown') as FileArtifact['type'];
+  const archetype = ARCHETYPES[(kernelArtifact.gate - 1) % 64];
+  const artifact: FileArtifact = {
+    id:        kernelArtifact.id,
+    name:      kernelArtifact.name,
+    type,
+    circuit:   kernelArtifact.circuit,
+    gate:      kernelArtifact.gate,
+    size:      kernelArtifact.size,
+    timestamp: kernelArtifact.timestamp,
+    archetype,
+    quality:   kernelArtifact.gate % 2 === 0 ? 'yielding' : 'initiating',
+  };
+
+  return { artifact, kernelArtifact };
 }
 
 export class EmbodiedWorldEngine {
-  agents: Map<string, Agent> = new Map();
-  places: Map<string, Place> = new Map(
+  agents:   Map<string, Agent>  = new Map();
+  places:   Map<string, Place>  = new Map(
     PLACE_CONFIGS.map(p => [p.id, { ...p, currentAgents: [], artifacts: [] }])
   );
-  messages: AgentMessage[] = [];
-  time: WorldTime = { day: 1, hour: 8, minute: 0 };
+  messages: AgentMessage[]      = [];
+  time:     WorldTime           = { day: 1, hour: 8, minute: 0 };
 
-  // Morph OS kernel state
-  activeGates: Set<number> = new Set();
-  consciousnessLevel: number = 0;
+  // Kernel state (proxied through MorphKernel)
+  get activeGates():        Set<number> { return morphKernel.meta.getActiveGates(); }
+  get consciousnessLevel(): number      { return morphKernel.meta.getConsciousnessLevel(); }
+  get kernelState():        KernelState { return morphKernel.getState(); }
 
   private updateCallbacks: Array<(engine: EmbodiedWorldEngine) => void> = [];
-  private isRunning = false;
+  private isRunning    = false;
   private updateInterval: ReturnType<typeof setInterval> | null = null;
 
-  // ── Agent Creation ────────────────────────────────────────────────────────
+  // ── Agent Creation ──────────────────────────────────────────────────────────
 
   createAgent(human: HumanProfile): Agent {
-    const element    = this.determineElement(human.birthday);
-    const hdType     = this.determineHDType(human.birthday);
-    const archetype  = this.determineArchetype(hdType);
-    const colors     = ELEMENT_COLORS[element];
-    const gate       = pickGate(human.birthday);
-    const circuit    = gateToCircuit(gate);
+    const element   = this.determineElement(human.birthday);
+    const hdType    = this.determineHDType(human.birthday);
+    const archetype = this.determineArchetype(hdType);
+    const colors    = ELEMENT_COLORS[element];
+    const gate      = pickGate(human.birthday);
+
+    // Activate gate through kernel (real channel formation)
+    const isNew = morphKernel.activateAgentGate(gate, human.name);
+
+    // Circuit is determined by kernel's gate→circuit map
+    const circuit = morphKernel.meta['activeGates'].has(gate)
+      ? (CIRCUIT_CONFIG[
+          Object.entries(CIRCUIT_CONFIG).find(([, cfg]) =>
+            cfg.gates.includes(gate)
+          )?.[0] as CircuitType || 'integration'
+        ] ? Object.entries(CIRCUIT_CONFIG).find(([, cfg]) =>
+            cfg.gates.includes(gate)
+          )?.[0] as CircuitType : 'integration')
+      : 'integration';
+
+    // Use kernel's LSM to perturb understanding reservoir on agent birth
+    morphKernel.lsm.update(gate / 64);
 
     const agent: Agent = {
-      id: `agent_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-      humanId: human.id,
-      name: this.generateAgentName(human, element),
+      id:       `agent_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      humanId:  human.id,
+      name:     this.generateAgentName(human, element),
       element,
       archetype,
       hdType,
@@ -149,81 +177,90 @@ export class EmbodiedWorldEngine {
         (Math.random() - 0.5) * 15
       ),
       targetPosition: null,
-      rotation: Math.random() * Math.PI * 2,
+      rotation:       Math.random() * Math.PI * 2,
       animationState: 'idle',
-      animationTime: 0,
-      age: 0,
-      lifeStage: 'infant',
-      consciousness: { level: 10, stage: 'dormant' },
-      needs: { energy: 80, connection: 50, growth: 60, purpose: 40, rest: 70 },
+      animationTime:  0,
+      age:            0,
+      lifeStage:      'infant',
+      consciousness:  { level: 10, stage: 'dormant' },
+      needs:          { energy: 80, connection: 50, growth: 60, purpose: 40, rest: 70 },
       currentActivity: null,
-      currentPlace: 'integration',
-      relationships: [],
+      currentPlace:   'integration',
+      relationships:  [],
       appearance: {
-        color: colors.primary,
+        color:         colors.primary,
         glowIntensity: 0.5,
-        height: 1.7 + Math.random() * 0.2,
-        auraColor: colors.aura,
+        height:        1.7 + Math.random() * 0.2,
+        auraColor:     colors.aura,
       },
     };
 
     this.agents.set(agent.id, agent);
     this.addToPlace(agent, 'integration');
-    this.activateGate(gate);
+
+    if (isNew) {
+      this.addMessage({
+        id:        `msg_${Date.now()}`,
+        timestamp: Date.now(),
+        fromAgent: 'KERNEL',
+        toHuman:   'all',
+        content:   `Agent "${agent.name}" born — Gate ${gate} activated (${circuit} circuit)`,
+        context:   `${CIRCUIT_CONFIG[circuit]?.architecture || 'Meta-Controller'} · channel formation checked`,
+      });
+    }
+
     return agent;
   }
 
-  activateGate(gate: number) {
-    this.activeGates.add(gate);
-    // Count how many integration gates (10, 20, 34, 57) are active
-    const integrationActive = INTEGRATION_GATES.filter(g => this.activeGates.has(g)).length;
-    this.consciousnessLevel = integrationActive;
-  }
-
-  ingestArtifact(artifact: Omit<FileArtifact, 'id' | 'timestamp'>): FileArtifact {
+  // Called from UI after kernel ingest to place artifact in zone and move agents
+  ingestArtifact(artifact: FileArtifact): FileArtifact {
     const full: FileArtifact = {
       ...artifact,
-      id: `art_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-      timestamp: Date.now(),
+      id:        artifact.id || `art_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      timestamp: artifact.timestamp || Date.now(),
     };
 
-    // Place in the correct zone
+    // Place in zone
     const place = this.places.get(full.circuit) || this.places.get('integration')!;
-    place.artifacts.push(full);
-
-    // Activate its gate
-    this.activateGate(full.gate);
-
-    // Send agents from that circuit toward the zone
-    for (const agent of Array.from(this.agents.values())) {
-      if (agent.circuit === full.circuit && Math.random() < 0.7) {
-        this.moveAgentToPlace(agent, full.circuit);
-      }
+    if (!place.artifacts.find(a => a.id === full.id)) {
+      place.artifacts.push(full);
     }
 
-    // Add a system message
-    this.addMessage({
-      id: `msg_${Date.now()}`,
-      timestamp: Date.now(),
-      fromAgent: 'KERNEL',
-      toHuman: 'all',
-      content: `Artifact "${full.name}" ingested → ${full.circuit} circuit (Gate ${full.gate} · ${full.archetype})`,
-      context: `${full.type.toUpperCase()} · ${CIRCUIT_CONFIG[full.circuit].architecture}`,
-    });
+    // Route agents in matching circuit toward zone (via kernel routing)
+    for (const agent of Array.from(this.agents.values())) {
+      if (agent.circuit === full.circuit && Math.random() < 0.7) {
+        // Route through kernel (cross-circuit if needed)
+        const path = morphKernel.routeAgent(
+          agent.currentPlace as CircuitType,
+          full.circuit
+        );
+        this.moveAgentToPlace(agent, full.circuit);
+        if (path.integrated) {
+          this.addMessage({
+            id:        `msg_${Date.now()}_${agent.id}`,
+            timestamp: Date.now(),
+            fromAgent: agent.name,
+            toHuman:   'all',
+            content:   `Routed → ${full.circuit} via Gate ${path.gate}`,
+            context:   `${agent.circuit} → [${path.gate}] → ${full.circuit}`,
+          });
+        }
+      }
+    }
 
     return full;
   }
 
   private addMessage(msg: AgentMessage) {
     this.messages.push(msg);
-    if (this.messages.length > 50) this.messages.shift();
+    if (this.messages.length > 60) this.messages.shift();
   }
 
-  // ── Lifecycle ──────────────────────────────────────────────────────────────
+  // ── Lifecycle ───────────────────────────────────────────────────────────────
 
   start() {
     if (this.isRunning) return;
-    this.isRunning = true;
+    this.isRunning     = true;
     this.updateInterval = setInterval(() => this.tick(), 200);
   }
 
@@ -247,7 +284,7 @@ export class EmbodiedWorldEngine {
     return this.messages.slice(-10);
   }
 
-  // ── Tick ───────────────────────────────────────────────────────────────────
+  // ── Tick ────────────────────────────────────────────────────────────────────
 
   private tick() {
     this.advanceTime();
@@ -260,11 +297,11 @@ export class EmbodiedWorldEngine {
   private advanceTime() {
     this.time.minute += 5;
     if (this.time.minute >= 60) { this.time.minute = 0; this.time.hour++; }
-    if (this.time.hour >= 24)   { this.time.hour = 0;   this.time.day++; }
+    if (this.time.hour   >= 24) { this.time.hour   = 0; this.time.day++;  }
   }
 
   private updateAgent(agent: Agent) {
-    agent.age += 0.01;
+    agent.age          += 0.01;
     agent.animationTime += 0.2;
 
     this.updateLifeStage(agent);
@@ -320,35 +357,63 @@ export class EmbodiedWorldEngine {
     const speed = WALK_SPEED * (agent.lifeStage === 'adult' ? 1 : 0.7);
     agent.position.x += (dx / dist) * speed;
     agent.position.z += (dz / dist) * speed;
-    agent.rotation = Math.atan2(dx, dz);
+    agent.rotation    = Math.atan2(dx, dz);
     agent.animationState = 'walking';
   }
 
   private evolveConsciousness(agent: Agent) {
     const avgNeed = Object.values(agent.needs).reduce((s, v) => s + v, 0) / 5;
-    agent.consciousness.level = Math.min(100, agent.consciousness.level + (avgNeed > 60 ? 0.02 : -0.01));
+    agent.consciousness.level = Math.min(100,
+      agent.consciousness.level + (avgNeed > 60 ? 0.02 : -0.01)
+    );
     if      (agent.consciousness.level < 30) agent.consciousness.stage = 'dormant';
     else if (agent.consciousness.level < 70) agent.consciousness.stage = 'awakening';
     else                                     agent.consciousness.stage = 'aware';
   }
 
   private decideNextAction(agent: Agent) {
-    const lowestNeed = Object.entries(agent.needs).reduce((a, b) => a[1] < b[1] ? a : b);
-    const needMap: Record<string, string> = {
-      energy: 'resting', connection: 'socializing', growth: 'learning', purpose: 'creating', rest: 'meditating',
-    };
-    const activity = needMap[lowestNeed[0]] || 'exploring';
+    const prev = agent.currentActivity || 'exploring';
+
+    // Use kernel's MC to predict next activity
+    const predicted = morphKernel.mc.predict(prev);
+    const activity  = predicted;
+
+    // Feed transition back into MC + HMM
+    const obs = morphKernel.observeActivity(prev, activity);
+
     agent.currentActivity = activity;
 
-    // Pick a place that supports this activity — prefer agent's home circuit
+    // Determine target place — prefer home circuit
     const suitable = Array.from(this.places.values()).filter(p =>
       p.activities.includes(activity) && p.currentAgents.length < p.capacity
     );
     if (!suitable.length) return;
 
     const homeCircuit = suitable.find(p => p.circuit === agent.circuit);
-    const target = homeCircuit || suitable[Math.floor(Math.random() * suitable.length)];
+    const target      = homeCircuit || suitable[Math.floor(Math.random() * suitable.length)];
+
+    // Route through kernel (cross-circuit check)
+    if (target.circuit !== agent.currentPlace) {
+      morphKernel.routeAgent(
+        agent.currentPlace as CircuitType,
+        target.circuit as CircuitType
+      );
+    }
+
     this.moveAgentToPlace(agent, target.id);
+
+    // Occasionally emit a kernel-aware message
+    if (Math.random() < 0.05) {
+      const ks = morphKernel.getState();
+      this.addMessage({
+        id:        `msg_${Date.now()}`,
+        timestamp: Date.now(),
+        fromAgent: agent.name,
+        toHuman:   'all',
+        content:   `${obs.identity} mode · MC→${obs.predicted} · HMM entropy ${obs.entropy.toFixed(2)}`,
+        context:   `Gate ${agent.gate} · ${agent.circuit} → ${target.circuit}`,
+      });
+    }
   }
 
   private moveAgentToPlace(agent: Agent, placeId: string) {
@@ -381,7 +446,10 @@ export class EmbodiedWorldEngine {
 
   private attemptSocialInteraction(agent: Agent) {
     const placeAgents = this.places.get(agent.currentPlace)?.currentAgents || [];
-    const others = placeAgents.filter(id => id !== agent.id).map(id => this.agents.get(id)).filter(Boolean) as Agent[];
+    const others = placeAgents
+      .filter(id => id !== agent.id)
+      .map(id => this.agents.get(id))
+      .filter(Boolean) as Agent[];
     if (!others.length) return;
 
     const other = others[Math.floor(Math.random() * others.length)];
@@ -391,41 +459,55 @@ export class EmbodiedWorldEngine {
     if (exists) { exists.strength = Math.min(100, exists.strength + 5); }
     else {
       const types = ['friend', 'mentor', 'student', 'partner'] as const;
-      agent.relationships.push({ agentId: other.id, type: types[Math.floor(Math.random() * types.length)], strength: 20 });
+      agent.relationships.push({
+        agentId: other.id,
+        type:    types[Math.floor(Math.random() * types.length)],
+        strength: 20,
+      });
     }
 
-    // Occasionally produce a message
-    if (Math.random() < 0.15) {
+    // Cross-circuit resonance: route between agent circuits
+    if (agent.circuit !== other.circuit) {
+      const path = morphKernel.routeAgent(agent.circuit, other.circuit);
+      if (Math.random() < 0.1) {
+        this.addMessage({
+          id:        `msg_${Date.now()}`,
+          timestamp: Date.now(),
+          fromAgent: agent.name,
+          toHuman:   'all',
+          content:   `Cross-circuit resonance with ${other.name} via Gate ${path.gate}`,
+          context:   `${agent.circuit} ↔ ${other.circuit} · ${ARCHETYPES[(path.gate - 1) % 64]}`,
+        });
+      }
+    } else if (Math.random() < 0.12) {
       const msgs = [
         `Gate ${agent.gate} resonates with Gate ${other.gate}`,
-        `${agent.circuit} circuit activating in ${agent.currentPlace}`,
-        `Archetype "${agent.archetype}" meets "${other.archetype}"`,
-        `Consciousness at ${agent.consciousness.level.toFixed(0)}%`,
+        `${agent.circuit} circuit — ${ARCHETYPES[(agent.gate - 1) % 64]} meets ${ARCHETYPES[(other.gate - 1) % 64]}`,
+        `Consciousness at ${agent.consciousness.level.toFixed(0)}% · HMM: ${morphKernel.hmm.mostLikelyState()}`,
+        `MC prediction: ${morphKernel.mc.mostLikelyNext()} · LSM readout: ${morphKernel.lsm.readout().toFixed(3)}`,
       ];
       this.addMessage({
-        id: `msg_${Date.now()}`,
+        id:        `msg_${Date.now()}`,
         timestamp: Date.now(),
         fromAgent: agent.name,
-        toHuman: 'all',
-        content: msgs[Math.floor(Math.random() * msgs.length)],
-        context: `${agent.currentPlace} · ${agent.currentActivity || 'idle'}`,
+        toHuman:   'all',
+        content:   msgs[Math.floor(Math.random() * msgs.length)],
+        context:   `${agent.currentPlace} · ${agent.currentActivity || 'idle'}`,
       });
     }
   }
 
-  // ── Determination ──────────────────────────────────────────────────────────
+  // ── Determination ───────────────────────────────────────────────────────────
 
   private determineElement(birthday: string): ElementType {
-    const d = new Date(birthday);
-    const m = d.getMonth();
+    const m = new Date(birthday).getMonth();
     const elements: ElementType[] = ['FIRE', 'EARTH', 'AIR', 'WATER', 'AETHER'];
     return elements[m % 5];
   }
 
   private determineHDType(birthday: string): Agent['hdType'] {
-    const d = new Date(birthday);
     const types: Agent['hdType'][] = ['Generator', 'Manifestor', 'Projector', 'Reflector'];
-    return types[d.getDate() % 4];
+    return types[new Date(birthday).getDate() % 4];
   }
 
   private determineArchetype(hdType: Agent['hdType']): string {

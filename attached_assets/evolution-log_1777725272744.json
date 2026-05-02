@@ -1,0 +1,385 @@
+[
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777426567221_mjq5gznh6",
+    "mode": "improved",
+    "input": "./memory/demo_messy.js",
+    "output": "./memory/pipeline_demo_messy_improved.js",
+    "timestamp": 1777426567225
+  },
+  {
+    "type": "regeneration",
+    "artifactId": "artifact_1777426633878_0gubd5z8x",
+    "mode": "improved",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777426647961
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777426652828_cj311inf9",
+    "mode": "improved",
+    "input": "memory/demo_messy.js",
+    "output": "./memory/pipeline_demo_messy_improved.js",
+    "timestamp": 1777426652842
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777426728728_buu0vtiez",
+    "mode": "improved",
+    "input": "memory/demo_messy.js",
+    "output": "./memory/pipeline_demo_messy_improved.js",
+    "timestamp": 1777426728741
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777426746019_cta14mnvp",
+    "mode": "improved",
+    "input": "memory/demo_messy.js",
+    "output": "./memory/pipeline_demo_messy_improved.js",
+    "timestamp": 1777426746034
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777426813849_ncx50d8kn",
+    "mode": "improved",
+    "input": "memory/demo_messy.js",
+    "output": "./memory/pipeline_demo_messy_improved.js",
+    "timestamp": 1777426813882
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777427035203_ykb43e6p1",
+    "mode": "improved",
+    "input": "memory/demo_messy.js",
+    "output": "./memory/pipeline_demo_messy_improved.js",
+    "timestamp": 1777427035227
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777427057741_g46yt5js8",
+    "mode": "improved",
+    "verification": {
+      "syntaxValid": false,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777427057742
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777427130237_m3scd29kw",
+    "mode": "improved",
+    "verification": {
+      "syntaxValid": false,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777427130239
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777427665525_0haqmr8zv",
+    "mode": "improved",
+    "input": "code",
+    "output": 84,
+    "timestamp": 1777427665526
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777427665529_ueqp5ra1d",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777427665531
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777427670055_u1agywb6j",
+    "mode": "improved",
+    "input": "./memory/demo_messy.js",
+    "output": 574,
+    "timestamp": 1777427670057
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777427694889_z8t7up762",
+    "mode": "improved",
+    "input": "./memory/demo_messy.js",
+    "output": 527,
+    "timestamp": 1777427694891
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777427715848_n76hy77dq",
+    "mode": "improved",
+    "input": "code",
+    "output": 99,
+    "timestamp": 1777427715849
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777427715852_qpbk97ltc",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777427715855
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777427747887_gab0ya0yg",
+    "mode": "improved",
+    "input": "code",
+    "output": 83,
+    "timestamp": 1777427747888
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777427747891_gswjtpc5x",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777427747893
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777427760277_df26tw8ws",
+    "mode": "improved",
+    "input": "./memory/demo_messy.js",
+    "output": 527,
+    "timestamp": 1777427760280
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777428894471_tozxjnfyw",
+    "mode": "improved",
+    "input": "code",
+    "output": 82,
+    "timestamp": 1777428894472
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777428894474_qv11e13c5",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777428894475
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777428901654_dlljsrh71",
+    "mode": "improved",
+    "input": "./memory/demo_messy.js",
+    "output": 522,
+    "timestamp": 1777428901655
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777429145575_r2zgpzw7i",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777429145576
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777429165051_au9tiol7w",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777429165052
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777429221161_14roxqfk2",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777429221162
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777429578160_c29glwjrk",
+    "mode": "improved",
+    "plan": {
+      "artifactId": "artifact_1777429578160_c29glwjrk",
+      "risk": "low",
+      "riskScore": 0.1,
+      "recommendedMode": "improved",
+      "safeTransforms": [
+        "remove_console_logs",
+        "loose_equality",
+        "var_to_let",
+        "add_jsdoc"
+      ],
+      "unsafeTransforms": [],
+      "confidence": 0.85,
+      "analysis": {
+        "complexity": 1,
+        "lines": 1,
+        "issues": 3,
+        "patterns": []
+      },
+      "reasoning": [
+        "Low complexity and few dependencies make this safe to improve aggressively.",
+        "Safe transforms available: remove_console_logs, loose_equality, var_to_let, add_jsdoc."
+      ],
+      "timestamp": 1777429578161
+    },
+    "input": "code",
+    "output": 82,
+    "timestamp": 1777429578161
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777429578164_3ummeeor3",
+    "verification": {
+      "syntaxValid": true,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777429578165
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777429587588_lm18ov201",
+    "mode": "improved",
+    "plan": {
+      "artifactId": "artifact_1777429587588_lm18ov201",
+      "risk": "low",
+      "riskScore": 0.1,
+      "recommendedMode": "improved",
+      "safeTransforms": [
+        "remove_console_logs",
+        "loose_equality",
+        "add_jsdoc"
+      ],
+      "unsafeTransforms": [
+        "var_to_let"
+      ],
+      "confidence": 0.85,
+      "analysis": {
+        "complexity": 4,
+        "lines": 27,
+        "issues": 3,
+        "patterns": []
+      },
+      "reasoning": [
+        "Low complexity and few dependencies make this safe to improve aggressively.",
+        "Safe transforms available: remove_console_logs, loose_equality, add_jsdoc.",
+        "Unsafe transforms requiring manual review: var_to_let."
+      ],
+      "timestamp": 1777429587589
+    },
+    "input": "./memory/demo_messy.js",
+    "output": 522,
+    "timestamp": 1777429587589
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777430761015_tfw61q0ya",
+    "mode": "improved",
+    "plan": {
+      "artifactId": "artifact_1777430761015_tfw61q0ya",
+      "risk": "low",
+      "riskScore": 0.1,
+      "recommendedMode": "improved",
+      "safeTransforms": [
+        "remove_console_logs",
+        "loose_equality",
+        "var_to_let",
+        "add_jsdoc"
+      ],
+      "unsafeTransforms": [],
+      "confidence": 0.85,
+      "analysis": {
+        "complexity": 1,
+        "lines": 1,
+        "issues": 3,
+        "patterns": []
+      },
+      "reasoning": [
+        "Low complexity and few dependencies make this safe to improve aggressively.",
+        "Safe transforms available: remove_console_logs, loose_equality, var_to_let, add_jsdoc."
+      ],
+      "timestamp": 1777430761016
+    },
+    "input": "code",
+    "output": 46,
+    "timestamp": 1777430761017
+  },
+  {
+    "type": "self_improvement",
+    "artifactId": "artifact_1777430761020_fe14lmy6l",
+    "verification": {
+      "syntaxValid": false,
+      "behaviorMatch": true,
+      "patternMatch": true,
+      "resonanceMatch": true
+    },
+    "timestamp": 1777430761039
+  },
+  {
+    "type": "pipeline",
+    "artifactId": "artifact_1777430838854_7zeomryth",
+    "mode": "improved",
+    "plan": {
+      "artifactId": "artifact_1777430838854_7zeomryth",
+      "risk": "low",
+      "riskScore": 0.1,
+      "recommendedMode": "improved",
+      "safeTransforms": [
+        "remove_console_logs",
+        "loose_equality",
+        "add_jsdoc"
+      ],
+      "unsafeTransforms": [
+        "var_to_let"
+      ],
+      "confidence": 0.85,
+      "analysis": {
+        "complexity": 4,
+        "lines": 27,
+        "issues": 3,
+        "patterns": []
+      },
+      "reasoning": [
+        "Low complexity and few dependencies make this safe to improve aggressively.",
+        "Safe transforms available: remove_console_logs, loose_equality, add_jsdoc.",
+        "Unsafe transforms requiring manual review: var_to_let."
+      ],
+      "timestamp": 1777430838855
+    },
+    "input": "./memory/demo_messy.js",
+    "output": 417,
+    "timestamp": 1777430838858
+  }
+]

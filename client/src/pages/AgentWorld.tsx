@@ -1,17 +1,15 @@
-import { useState, useEffect } from 'react';
-import { embodiedWorldEngine } from '../engine/EmbodiedWorldEngine';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { embodiedWorldEngine, classifyFile } from '../engine/EmbodiedWorldEngine';
 import { World3D } from '../components/world/World3D';
-import type { Agent, HumanProfile } from '../types/embodiedAgent';
-import { ELEMENT_COLORS, PLACE_CONFIGS } from '../types/embodiedAgent';
+import type { Agent, HumanProfile, FileArtifact } from '../types/embodiedAgent';
+import { ELEMENT_COLORS, CIRCUIT_CONFIG, CONSCIOUSNESS_LEVELS, INTEGRATION_GATES, PLACE_CONFIGS } from '../types/embodiedAgent';
 
-// ── Icons (inline SVG to avoid adding deps) ──────────────────────────────────
-
+// ── Inline SVG Icons ──────────────────────────────────────────────────────────
 const Icon = {
   Sparkles: () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/>
       <path d="M5 3l.75 2.25L8 6l-2.25.75L5 9l-.75-2.25L2 6l2.25-.75z"/>
-      <path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/>
     </svg>
   ),
   Users: () => (
@@ -56,91 +54,197 @@ const Icon = {
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
   ),
+  Upload: () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+    </svg>
+  ),
+  Zap: () => (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
 };
 
-// ── Create Agent Dialog ───────────────────────────────────────────────────────
-
-function CreateDialog({
-  onSubmit,
-  onClose,
-}: {
-  onSubmit: (p: HumanProfile) => void;
-  onClose: () => void;
-}) {
-  const [name, setName] = useState('');
-  const [birthday, setBirthday] = useState('1990-01-01');
-  const [intentions, setIntentions] = useState('growth, creativity, connection');
+// ── Consciousness Meter ───────────────────────────────────────────────────────
+function ConsciousnessMeter({ level, activeGates }: { level: number; activeGates: Set<number> }) {
+  const label = CONSCIOUSNESS_LEVELS[level] || 'Mechanical';
+  const pct = (level / 4) * 100;
+  const color = ['#334155', '#6366f1', '#14b8a6', '#ec4899', '#a855f7'][level];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-indigo-950/80 p-8 shadow-2xl">
-        <h2 className="mb-1 text-2xl font-light tracking-wide text-white">
-          Birth Your Extension
-        </h2>
-        <p className="mb-6 text-sm text-white/40">
-          Create an embodied agent that lives and grows in this world.
-        </p>
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-[10px] font-medium tracking-widest text-white/30">KERNEL CONSCIOUSNESS</p>
+        <span className="text-xs font-medium" style={{ color }}>{level}/4</span>
+      </div>
 
-        <div className="space-y-4">
-          <div>
-            <label className="mb-1 block text-xs text-white/50">Your Name</label>
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Enter your name..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/30 outline-none focus:border-indigo-500/60"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-xs text-white/50">Birthday</label>
-            <input
-              type="date"
-              value={birthday}
-              onChange={e => setBirthday(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-indigo-500/60"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-xs text-white/50">Intentions</label>
-            <input
-              value={intentions}
-              onChange={e => setIntentions(e.target.value)}
-              placeholder="growth, creativity..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/30 outline-none focus:border-indigo-500/60"
-            />
-          </div>
-        </div>
+      {/* Bar */}
+      <div className="mb-3 h-2 overflow-hidden rounded-full bg-white/10">
+        <div
+          className="h-full rounded-full transition-all duration-1000"
+          style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}80, ${color})` }}
+        />
+      </div>
 
-        <div className="mt-6 flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 rounded-xl border border-white/10 py-3 text-sm text-white/50 transition hover:bg-white/5"
-          >
-            Cancel
-          </button>
-          <button
-            disabled={!name || !birthday}
-            onClick={() =>
-              onSubmit({
-                id: `human_${Date.now()}`,
-                name,
-                birthday,
-                intentions: intentions.split(',').map(s => s.trim()).filter(Boolean),
-                values: ['authenticity', 'growth'],
-              })
-            }
-            className="flex-1 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
-          >
-            Birth Agent
-          </button>
-        </div>
+      <p className="mb-3 text-xs text-white/50">{label}</p>
+
+      {/* Integration gates */}
+      <div className="grid grid-cols-4 gap-1.5">
+        {INTEGRATION_GATES.map(gate => {
+          const active = activeGates.has(gate);
+          return (
+            <div
+              key={gate}
+              className="flex flex-col items-center rounded-lg border py-1.5 transition-all duration-500"
+              style={{
+                borderColor: active ? `${color}60` : 'rgba(255,255,255,0.06)',
+                background: active ? `${color}18` : 'transparent',
+              }}
+            >
+              <span className="text-[10px] font-bold" style={{ color: active ? color : 'rgba(255,255,255,0.2)' }}>
+                {gate}
+              </span>
+              <span className="text-[8px] text-white/20">gate</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// ── Agent Side Panel ──────────────────────────────────────────────────────────
+// ── File Drop Zone ────────────────────────────────────────────────────────────
+function FileDropZone({
+  onIngest,
+  recentArtifacts,
+}: {
+  onIngest: (artifact: FileArtifact) => void;
+  recentArtifacts: FileArtifact[];
+}) {
+  const [dragging, setDragging] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const processFiles = useCallback(
+    async (files: FileList | File[]) => {
+      setProcessing(true);
+      const arr = Array.from(files);
+      for (const file of arr) {
+        const classified = classifyFile(file.name, file.size);
+        const artifact = embodiedWorldEngine.ingestArtifact(classified);
+        onIngest(artifact);
+        await new Promise(r => setTimeout(r, 120));
+      }
+      setProcessing(false);
+    },
+    [onIngest]
+  );
+
+  const onDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragging(false);
+      if (e.dataTransfer.files.length) processFiles(e.dataTransfer.files);
+    },
+    [processFiles]
+  );
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <p className="mb-3 text-[10px] font-medium tracking-widest text-white/30">INGEST ARTIFACTS</p>
+
+      {/* Drop target */}
+      <div
+        className="relative mb-3 cursor-pointer rounded-xl border-2 border-dashed p-4 text-center transition-all"
+        style={{
+          borderColor: dragging ? '#a855f7' : 'rgba(255,255,255,0.08)',
+          background: dragging ? 'rgba(168,85,247,0.08)' : 'transparent',
+        }}
+        onDragOver={e => { e.preventDefault(); setDragging(true); }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={onDrop}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept=".js,.ts,.jsx,.tsx,.py,.html,.htm,.css,.json,.yaml,.yml"
+          className="hidden"
+          onChange={e => e.target.files && processFiles(e.target.files)}
+        />
+        <div className="mb-1 flex justify-center text-white/20">
+          <Icon.Upload />
+        </div>
+        {processing ? (
+          <p className="text-xs text-purple-400 animate-pulse">Processing…</p>
+        ) : (
+          <>
+            <p className="text-xs text-white/40">Drop files or click</p>
+            <p className="mt-0.5 text-[10px] text-white/20">js · py · html · css · json · yaml</p>
+          </>
+        )}
+      </div>
+
+      {/* Recent artifacts */}
+      {recentArtifacts.length > 0 && (
+        <div className="space-y-1.5 max-h-40 overflow-y-auto">
+          {recentArtifacts.slice(-6).reverse().map(a => {
+            const cfg = CIRCUIT_CONFIG[a.circuit];
+            return (
+              <div key={a.id} className="flex items-center gap-2 rounded-lg bg-white/5 px-2.5 py-1.5">
+                <span className="text-sm" style={{ color: cfg.color }}>{cfg.glyph}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="truncate text-xs text-white/70">{a.name}</p>
+                  <p className="text-[10px] text-white/30">{a.circuit} · Gate {a.gate}</p>
+                </div>
+                <span className="text-[9px] uppercase font-medium rounded px-1 py-0.5" style={{ background: `${cfg.color}20`, color: cfg.color }}>
+                  {a.type}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Circuit Legend ────────────────────────────────────────────────────────────
+function CircuitLegend({ places }: { places: { id: string; name: string; color: string; glyph: string; circuit: string; currentAgents: string[]; artifacts: FileArtifact[] }[] }) {
+  const main = places.filter(p => p.id !== 'plaza');
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <p className="mb-3 text-[10px] font-medium tracking-widest text-white/30">CIRCUITS</p>
+      <div className="space-y-2">
+        {main.map(p => {
+          const cfg = CIRCUIT_CONFIG[p.circuit as keyof typeof CIRCUIT_CONFIG];
+          return (
+            <div key={p.id} className="flex items-center gap-2 rounded-lg border border-white/5 bg-white/5 px-2.5 py-2">
+              <span className="text-base w-5 text-center" style={{ color: p.color }}>{p.glyph}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white/70 font-medium truncate">{p.name}</p>
+                <p className="text-[10px] text-white/30">{cfg?.architecture}</p>
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] text-white/30">
+                <span>{p.currentAgents.length}</span>
+                {p.artifacts.length > 0 && (
+                  <span className="rounded px-1 py-0.5" style={{ background: `${p.color}20`, color: p.color }}>
+                    {p.artifacts.length} files
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Agent Panel ───────────────────────────────────────────────────────────────
 function AgentPanel({
   agent,
   messages,
@@ -153,6 +257,7 @@ function AgentPanel({
   onFollow: () => void;
 }) {
   const colors = ELEMENT_COLORS[agent.element];
+  const circuitCfg = CIRCUIT_CONFIG[agent.circuit];
   const [tab, setTab] = useState<'status' | 'messages'>('status');
 
   return (
@@ -183,19 +288,22 @@ function AgentPanel({
             </button>
           </div>
         </div>
-        <p className="mt-2 text-xs text-white/30">
-          {agent.lifeStage} · day {agent.age} · {agent.hdType}
-        </p>
+
+        {/* Gate / circuit badge */}
+        <div className="mt-2 flex items-center gap-2">
+          <span className="rounded-full border px-2 py-0.5 text-[10px] font-medium"
+            style={{ borderColor: `${circuitCfg.color}40`, color: circuitCfg.color, background: `${circuitCfg.color}15` }}>
+            {circuitCfg.glyph} {agent.circuit}
+          </span>
+          <span className="text-[10px] text-white/30">Gate {agent.gate} · {agent.hdType}</span>
+        </div>
       </div>
 
       {/* Tabs */}
       <div className="flex border-b border-white/10">
         {(['status', 'messages'] as const).map(t => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`flex-1 py-2 text-xs capitalize transition ${tab === t ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/60'}`}
-          >
+          <button key={t} onClick={() => setTab(t)}
+            className={`flex-1 py-2 text-xs capitalize transition ${tab === t ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/60'}`}>
             {t}
           </button>
         ))}
@@ -205,47 +313,32 @@ function AgentPanel({
       <div className="max-h-80 overflow-y-auto p-4">
         {tab === 'status' && (
           <div className="space-y-4">
-            {/* Consciousness */}
             <div>
               <div className="mb-1 flex justify-between text-xs text-white/50">
                 <span>Consciousness</span>
                 <span className="capitalize text-white/70">{agent.consciousness.stage}</span>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${agent.consciousness.level}%`, background: `linear-gradient(90deg, ${colors.primary}, ${colors.glow})` }}
-                />
+                <div className="h-full rounded-full transition-all duration-700"
+                  style={{ width: `${agent.consciousness.level}%`, background: `linear-gradient(90deg, ${colors.primary}, ${colors.glow})` }} />
               </div>
             </div>
-
-            {/* Current state */}
             <div className="rounded-xl bg-white/5 p-3">
               <p className="mb-0.5 text-xs text-white/40">Now</p>
               <p className="text-sm capitalize text-white/80">{agent.animationState}</p>
-              <p className="text-xs text-white/30">{agent.currentPlace.replace('_', ' ')}</p>
+              <p className="text-xs text-white/30">{agent.currentPlace}</p>
             </div>
-
-            {/* Needs */}
             <div className="space-y-2">
               {Object.entries(agent.needs).map(([k, v]) => (
                 <div key={k} className="flex items-center gap-2">
                   <span className="w-16 text-xs capitalize text-white/40">{k}</span>
                   <div className="flex-1 overflow-hidden rounded-full bg-white/10" style={{ height: 4 }}>
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${v}%`,
-                        background: v < 30 ? '#f87171' : v < 60 ? '#fbbf24' : '#4ade80',
-                      }}
-                    />
+                    <div className="h-full rounded-full" style={{ width: `${v}%`, background: v < 30 ? '#f87171' : v < 60 ? '#fbbf24' : '#4ade80' }} />
                   </div>
                   <span className="w-7 text-right text-xs text-white/30">{Math.round(v)}</span>
                 </div>
               ))}
             </div>
-
-            {/* Relationships */}
             {agent.relationships.length > 0 && (
               <div>
                 <p className="mb-1.5 text-xs text-white/40">Connections</p>
@@ -263,19 +356,17 @@ function AgentPanel({
             )}
           </div>
         )}
-
         {tab === 'messages' && (
           <div className="space-y-3">
-            {messages.length === 0 ? (
-              <p className="py-4 text-center text-xs text-white/30">No messages yet</p>
-            ) : (
-              messages.slice(-5).reverse().map((m, i) => (
-                <div key={i} className="rounded-xl bg-white/5 p-3">
-                  <p className="text-xs italic text-white/70">"{m.content}"</p>
-                  <p className="mt-1 text-xs text-white/30">{m.context}</p>
-                </div>
-              ))
-            )}
+            {messages.length === 0
+              ? <p className="py-4 text-center text-xs text-white/30">No messages yet</p>
+              : messages.slice(-5).reverse().map((m, i) => (
+                  <div key={i} className="rounded-xl bg-white/5 p-3">
+                    <p className="text-xs italic text-white/70">"{m.content}"</p>
+                    <p className="mt-1 text-xs text-white/30">{m.context}</p>
+                  </div>
+                ))
+            }
           </div>
         )}
       </div>
@@ -283,38 +374,50 @@ function AgentPanel({
   );
 }
 
-// ── Product Zone Legend ───────────────────────────────────────────────────────
+// ── Create Dialog ─────────────────────────────────────────────────────────────
+function CreateDialog({ onSubmit, onClose }: { onSubmit: (p: HumanProfile) => void; onClose: () => void }) {
+  const [name, setName] = useState('');
+  const [birthday, setBirthday] = useState('1990-01-01');
+  const [intentions, setIntentions] = useState('growth, creativity, connection');
 
-function ProductLegend({ places }: { places: { id: string; name: string; color: string; currentAgents: string[]; productTag?: string }[] }) {
-  const products = places.filter(p => p.productTag);
   return (
-    <div className="space-y-2">
-      <p className="mb-2 text-xs font-medium tracking-widest text-white/30">PRODUCTS</p>
-      {products.map(p => (
-        <div key={p.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/5 bg-white/5 px-3 py-2">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full" style={{ background: p.color, boxShadow: `0 0 6px ${p.color}` }} />
-            <span className="text-xs text-white/70">{p.name}</span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-indigo-950/80 p-8 shadow-2xl">
+        <h2 className="mb-1 text-2xl font-light tracking-wide text-white">Birth Your Extension</h2>
+        <p className="mb-6 text-sm text-white/40">An embodied agent that lives and grows in this world.</p>
+        <div className="space-y-4">
+          <div>
+            <label className="mb-1 block text-xs text-white/50">Your Name</label>
+            <input value={name} onChange={e => setName(e.target.value)} placeholder="Enter your name…"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/30 outline-none focus:border-indigo-500/60" />
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/30">{p.currentAgents.length} agents</span>
-            {p.productTag && (
-              <span
-                className="rounded-full px-1.5 py-0.5 text-[10px] font-medium"
-                style={{ background: `${p.color}25`, color: p.color }}
-              >
-                {p.productTag}
-              </span>
-            )}
+          <div>
+            <label className="mb-1 block text-xs text-white/50">Birthday</label>
+            <input type="date" value={birthday} onChange={e => setBirthday(e.target.value)}
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-indigo-500/60" />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-white/50">Intentions</label>
+            <input value={intentions} onChange={e => setIntentions(e.target.value)} placeholder="growth, creativity…"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/30 outline-none focus:border-indigo-500/60" />
           </div>
         </div>
-      ))}
+        <div className="mt-6 flex gap-3">
+          <button onClick={onClose} className="flex-1 rounded-xl border border-white/10 py-3 text-sm text-white/50 transition hover:bg-white/5">Cancel</button>
+          <button
+            disabled={!name || !birthday}
+            onClick={() => onSubmit({ id: `human_${Date.now()}`, name, birthday, intentions: intentions.split(',').map(s => s.trim()).filter(Boolean), values: ['authenticity', 'growth'] })}
+            className="flex-1 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
+          >
+            Birth Agent
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
-
 export default function AgentWorld() {
   const [engine] = useState(() => embodiedWorldEngine);
   const [, setTick] = useState(0);
@@ -324,6 +427,10 @@ export default function AgentWorld() {
   const [cameraMode, setCameraMode] = useState<'orbit' | 'follow' | 'pov'>('orbit');
   const [agentCount, setAgentCount] = useState(0);
   const [places, setPlaces] = useState(() => Array.from(embodiedWorldEngine.places.values()));
+  const [activeGates, setActiveGates] = useState<Set<number>>(new Set());
+  const [consciousnessLevel, setConsciousnessLevel] = useState(0);
+  const [recentArtifacts, setRecentArtifacts] = useState<FileArtifact[]>([]);
+  const [showIngest, setShowIngest] = useState(false);
 
   useEffect(() => {
     engine.start();
@@ -331,22 +438,23 @@ export default function AgentWorld() {
       setTick(t => t + 1);
       setAgentCount(engine.agents.size);
       setPlaces(Array.from(engine.places.values()));
+      setActiveGates(new Set(engine.activeGates));
+      setConsciousnessLevel(engine.consciousnessLevel);
     });
 
-    // Spawn 4 ambient agents
     const seeds: HumanProfile[] = [
-      { id: 'seed_0', name: 'Alex',   birthday: '1990-03-15', intentions: ['growth'], values: ['authenticity'] },
-      { id: 'seed_1', name: 'Jordan', birthday: '1985-07-22', intentions: ['connection'], values: ['creativity'] },
-      { id: 'seed_2', name: 'River',  birthday: '1995-11-08', intentions: ['purpose'], values: ['growth'] },
-      { id: 'seed_3', name: 'Sage',   birthday: '1988-01-30', intentions: ['wisdom'], values: ['truth'] },
+      { id: 'seed_0', name: 'Alex',   birthday: '1990-03-15', intentions: ['growth'],     values: ['authenticity'] },
+      { id: 'seed_1', name: 'Jordan', birthday: '1985-07-22', intentions: ['connection'],  values: ['creativity'] },
+      { id: 'seed_2', name: 'River',  birthday: '1995-11-08', intentions: ['purpose'],     values: ['growth'] },
+      { id: 'seed_3', name: 'Sage',   birthday: '1988-01-30', intentions: ['wisdom'],      values: ['truth'] },
     ];
     seeds.forEach(s => engine.createAgent(s));
 
     return () => engine.stop();
   }, [engine]);
 
-  const myAgent   = humanId ? engine.getAgentForHuman(humanId) : null;
-  const myMessages = humanId ? engine.getMessagesForHuman(humanId) : [];
+  const myAgent    = humanId ? engine.getAgentForHuman(humanId) : null;
+  const myMessages = humanId ? engine.getMessagesForHuman(humanId) : engine.getMessagesForHuman('all');
 
   function handleCreate(profile: HumanProfile) {
     setHumanId(profile.id);
@@ -355,49 +463,53 @@ export default function AgentWorld() {
     setShowCreate(false);
   }
 
+  function handleIngest(artifact: FileArtifact) {
+    setRecentArtifacts(prev => [...prev, artifact]);
+  }
+
   return (
     <div className="relative flex h-screen flex-col overflow-hidden bg-[#06060f] text-white">
 
-      {/* ── Top Header ── */}
+      {/* ── Header ── */}
       <header className="relative z-30 flex items-center justify-between border-b border-white/[0.06] bg-black/60 px-6 py-3 backdrop-blur-xl">
-        {/* Brand */}
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 shadow-lg shadow-indigo-900/50">
             <Icon.Sparkles />
           </div>
           <div>
             <h1 className="text-sm font-semibold tracking-widest text-white">MORPHING OS</h1>
-            <p className="text-[10px] text-white/30">Embodied Agent World</p>
+            <p className="text-[10px] text-white/30">Embodied Agent World · v1.1-Resonance</p>
           </div>
         </div>
 
-        {/* Stats */}
         <div className="flex items-center gap-6 text-xs text-white/40">
-          <div className="flex items-center gap-1.5">
-            <Icon.Users />
-            <span>{agentCount} agents</span>
+          <div className="flex items-center gap-1.5"><Icon.Users /><span>{agentCount} agents</span></div>
+          <div className="flex items-center gap-1.5"><Icon.Clock />
+            <span>Day {engine.time.day} &nbsp;{String(engine.time.hour).padStart(2,'0')}:{String(engine.time.minute).padStart(2,'0')}</span>
           </div>
+          {/* Consciousness badge */}
           <div className="flex items-center gap-1.5">
-            <Icon.Clock />
-            <span>
-              Day {engine.time.day} &nbsp;
-              {String(engine.time.hour).padStart(2, '0')}:{String(engine.time.minute).padStart(2, '0')}
+            <Icon.Zap />
+            <span style={{ color: ['#334155','#6366f1','#14b8a6','#ec4899','#a855f7'][consciousnessLevel] }}>
+              {CONSCIOUSNESS_LEVELS[consciousnessLevel]}
             </span>
           </div>
         </div>
 
-        {/* Controls */}
         <div className="flex items-center gap-2">
+          {/* Ingest toggle */}
+          <button
+            onClick={() => setShowIngest(s => !s)}
+            className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs transition ${showIngest ? 'border-purple-500/40 bg-purple-500/15 text-purple-300' : 'border-white/10 bg-white/5 text-white/40 hover:text-white/60'}`}
+          >
+            <Icon.Upload /><span>Ingest</span>
+          </button>
+
           {/* Camera mode */}
           <div className="flex rounded-lg border border-white/10 bg-white/5 p-0.5">
             {(['orbit', 'follow', 'pov'] as const).map(m => (
-              <button
-                key={m}
-                onClick={() => setCameraMode(m)}
-                className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-xs transition ${
-                  cameraMode === m ? 'bg-white/15 text-white' : 'text-white/40 hover:text-white/60'
-                }`}
-              >
+              <button key={m} onClick={() => setCameraMode(m)}
+                className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-xs transition ${cameraMode === m ? 'bg-white/15 text-white' : 'text-white/40 hover:text-white/60'}`}>
                 {m === 'orbit'  && <Icon.Camera />}
                 {m === 'follow' && <Icon.MapPin />}
                 {m === 'pov'    && <Icon.Eye />}
@@ -407,32 +519,30 @@ export default function AgentWorld() {
           </div>
 
           {!myAgent && (
-            <button
-              onClick={() => setShowCreate(true)}
-              className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-indigo-900/40 transition hover:opacity-90"
-            >
-              <Icon.Plus />
-              Create Extension
+            <button onClick={() => setShowCreate(true)}
+              className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-indigo-900/40 transition hover:opacity-90">
+              <Icon.Plus /><span>Create Extension</span>
             </button>
           )}
         </div>
       </header>
 
-      {/* ── Body: sidebar + 3D world ── */}
+      {/* ── Body ── */}
       <div className="relative flex flex-1 overflow-hidden">
 
         {/* Left Sidebar */}
-        <aside className="z-20 flex w-64 flex-col gap-4 overflow-y-auto border-r border-white/[0.06] bg-black/40 p-4 backdrop-blur-sm">
+        <aside className="z-20 flex w-64 flex-col gap-3 overflow-y-auto border-r border-white/[0.06] bg-black/40 p-3 backdrop-blur-sm">
 
-          {/* My Agent Card */}
+          {/* Consciousness Meter */}
+          <ConsciousnessMeter level={consciousnessLevel} activeGates={activeGates} />
+
+          {/* My Agent */}
           {myAgent ? (
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="mb-2 text-[10px] font-medium tracking-widest text-white/30">YOUR EXTENSION</p>
               <div className="flex items-center gap-3 mb-3">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-base font-light"
-                  style={{ background: `radial-gradient(circle, ${ELEMENT_COLORS[myAgent.element].glow}40, transparent)` }}
-                >
+                <div className="flex h-10 w-10 items-center justify-center rounded-full text-base font-light"
+                  style={{ background: `radial-gradient(circle, ${ELEMENT_COLORS[myAgent.element].glow}40, transparent)` }}>
                   {myAgent.name[0].toUpperCase()}
                 </div>
                 <div>
@@ -445,69 +555,47 @@ export default function AgentWorld() {
                 <span>{myAgent.consciousness.level.toFixed(0)}%</span>
               </div>
               <div className="h-1 overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${myAgent.consciousness.level}%`,
-                    background: `linear-gradient(90deg, ${ELEMENT_COLORS[myAgent.element].primary}, ${ELEMENT_COLORS[myAgent.element].glow})`,
-                  }}
-                />
+                <div className="h-full rounded-full" style={{
+                  width: `${myAgent.consciousness.level}%`,
+                  background: `linear-gradient(90deg, ${ELEMENT_COLORS[myAgent.element].primary}, ${ELEMENT_COLORS[myAgent.element].glow})`,
+                }} />
               </div>
-              <button
-                onClick={() => setSelectedAgent(myAgent)}
-                className="mt-3 w-full rounded-lg border border-white/10 py-1.5 text-xs text-white/50 transition hover:bg-white/5 hover:text-white/70"
-              >
+              <button onClick={() => setSelectedAgent(myAgent)}
+                className="mt-3 w-full rounded-lg border border-white/10 py-1.5 text-xs text-white/50 transition hover:bg-white/5 hover:text-white/70">
                 View Profile
               </button>
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-white/10 p-4 text-center">
               <p className="mb-3 text-xs text-white/30">No extension yet</p>
-              <button
-                onClick={() => setShowCreate(true)}
-                className="w-full rounded-lg bg-indigo-600/30 px-3 py-2 text-xs text-indigo-300 transition hover:bg-indigo-600/50"
-              >
+              <button onClick={() => setShowCreate(true)}
+                className="w-full rounded-lg bg-indigo-600/30 px-3 py-2 text-xs text-indigo-300 transition hover:bg-indigo-600/50">
                 + Birth Extension
               </button>
             </div>
           )}
 
+          {/* Ingest panel (collapsible) */}
+          {showIngest && (
+            <FileDropZone onIngest={handleIngest} recentArtifacts={recentArtifacts} />
+          )}
+
+          {/* Circuit legend */}
+          <CircuitLegend places={places} />
+
           {/* Messages */}
           {myMessages.length > 0 && (
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="mb-2 flex items-center gap-1.5 text-[10px] font-medium tracking-widest text-white/30">
-                <Icon.Msg /> MESSAGES
+                <Icon.Msg /> KERNEL LOG
               </p>
               <div className="space-y-2 max-h-36 overflow-y-auto">
-                {myMessages.slice(-3).reverse().map((m, i) => (
-                  <p key={i} className="text-xs italic text-white/60 leading-relaxed">
-                    "{m.content}"
-                  </p>
+                {myMessages.slice(-5).reverse().map((m, i) => (
+                  <p key={i} className="text-xs italic text-white/50 leading-relaxed">"{m.content}"</p>
                 ))}
               </div>
             </div>
           )}
-
-          {/* Product Legend */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <ProductLegend places={places} />
-          </div>
-
-          {/* World legend */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <p className="mb-3 text-[10px] font-medium tracking-widest text-white/30">ZONES</p>
-            <div className="space-y-1.5">
-              {places.filter(p => !p.productTag).map(p => (
-                <div key={p.id} className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full" style={{ background: p.color }} />
-                    <span className="text-white/50">{p.name}</span>
-                  </div>
-                  <span className="text-white/25">{p.currentAgents.length}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </aside>
 
         {/* 3D World */}
@@ -519,7 +607,7 @@ export default function AgentWorld() {
             cameraMode={cameraMode}
           />
 
-          {/* Agent Panel (right) */}
+          {/* Agent Panel */}
           {selectedAgent && (
             <div className="absolute right-4 top-4 z-20">
               <AgentPanel
@@ -534,13 +622,12 @@ export default function AgentWorld() {
           {/* Bottom hint */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
             <p className="rounded-full border border-white/10 bg-black/60 px-4 py-1.5 text-[11px] text-white/30 backdrop-blur-sm">
-              Click agents to inspect &nbsp;·&nbsp; Drag to orbit &nbsp;·&nbsp; Scroll to zoom
+              Click agents to inspect · Drag to orbit · Drop files to ingest
             </p>
           </div>
         </div>
       </div>
 
-      {/* Create Dialog */}
       {showCreate && <CreateDialog onSubmit={handleCreate} onClose={() => setShowCreate(false)} />}
     </div>
   );

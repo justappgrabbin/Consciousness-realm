@@ -1,0 +1,3707 @@
+{
+  "artifact_1777426456373_zshpazr4q": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777426456378_r1azbtseh": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777426456382_k34eqv4cp": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 20,
+      "activeChannels": [
+        "awakening",
+        "intuition",
+        "awakening",
+        "penetrating",
+        "power"
+      ],
+      "circuitFamily": "sensing",
+      "consciousnessLevel": 3
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count - consider splitting"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777426567221_mjq5gznh6": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777426567221_mjq5gznh6",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777426633878_0gubd5z8x": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777426633878_0gubd5z8x",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777426652828_cj311inf9": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777426652828_cj311inf9",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777426728728_buu0vtiez": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777426728728_buu0vtiez",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777426746019_cta14mnvp": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777426746019_cta14mnvp",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777426813849_ncx50d8kn": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777426813849_ncx50d8kn",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427035203_ykb43e6p1": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427035203_ykb43e6p1",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427057728_xslslgfhz": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427057728_xslslgfhz",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777427057735_45xpw7mig": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427057735_45xpw7mig",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427057741_g46yt5js8": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427057741_g46yt5js8",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 20,
+      "activeChannels": [
+        "awakening",
+        "intuition",
+        "awakening",
+        "penetrating",
+        "power"
+      ],
+      "circuitFamily": "sensing",
+      "consciousnessLevel": 3
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count - consider splitting"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777427130223_gu4hlpiuh": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427130223_gu4hlpiuh",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777427130232_co6ewfjln": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427130232_co6ewfjln",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "activeChannels": [
+        "logic"
+      ],
+      "circuitFamily": "understanding",
+      "consciousnessLevel": 1
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==) detected, use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427130237_m3scd29kw": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427130237_m3scd29kw",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 20,
+      "activeChannels": [
+        "awakening",
+        "intuition",
+        "awakening",
+        "penetrating",
+        "power"
+      ],
+      "circuitFamily": "sensing",
+      "consciousnessLevel": 3
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log statements found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use of var instead of let/const"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count - consider splitting"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777427665515_dw7sels9r": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427665515_dw7sels9r",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777427665525_0haqmr8zv": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427665525_0haqmr8zv",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427665529_ueqp5ra1d": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427665529_ueqp5ra1d",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777427670055_u1agywb6j": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427670055_u1agywb6j",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427694889_z8t7up762": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427694889_z8t7up762",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427715839_ai2jqlpxd": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427715839_ai2jqlpxd",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777427715848_n76hy77dq": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427715848_n76hy77dq",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427715852_qpbk97ltc": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427715852_qpbk97ltc",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777427747878_3z2z9qttq": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427747878_3z2z9qttq",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777427747887_gab0ya0yg": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427747887_gab0ya0yg",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777427747891_gswjtpc5x": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427747891_gswjtpc5x",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777427760277_df26tw8ws": {
+    "type": "morph_contract",
+    "version": "1.0",
+    "artifactId": "artifact_1777427760277_df26tw8ws",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let or const",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777428894463_661qwsckd": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777428894463_661qwsckd",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777428894471_tozxjnfyw": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777428894471_tozxjnfyw",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777428894474_qv11e13c5": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777428894474_qv11e13c5",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [
+      "observer",
+      "factory",
+      "singleton",
+      "inheritance",
+      "async_pattern",
+      "error_handling"
+    ],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [
+      "single_instance"
+    ],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777428901654_dlljsrh71": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777428901654_dlljsrh71",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429145564_qtihrezlc": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429145564_qtihrezlc",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777429145572_m69m8xkb2": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429145572_m69m8xkb2",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429145572_l3w4hwzwv": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429145572_l3w4hwzwv",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429145575_r2zgpzw7i": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429145575_r2zgpzw7i",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [
+      "observer",
+      "factory",
+      "singleton",
+      "inheritance",
+      "async_pattern",
+      "error_handling"
+    ],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [
+      "single_instance"
+    ],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777429165036_got7vnih0": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429165036_got7vnih0",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777429165045_jpakz1sqj": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429165045_jpakz1sqj",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429165045_z62snu6d4": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429165045_z62snu6d4",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429165051_au9tiol7w": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429165051_au9tiol7w",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [
+      "observer",
+      "factory",
+      "singleton",
+      "inheritance",
+      "async_pattern",
+      "error_handling"
+    ],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [
+      "single_instance"
+    ],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777429221149_9hm3qgv88": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429221149_9hm3qgv88",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777429221158_7wop2kndx": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429221158_7wop2kndx",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429221158_j2gzfkybm": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429221158_j2gzfkybm",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429221161_14roxqfk2": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429221161_14roxqfk2",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [
+      "observer",
+      "factory",
+      "singleton",
+      "inheritance",
+      "async_pattern",
+      "error_handling"
+    ],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [
+      "single_instance"
+    ],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777429299636_dvoc0xmal": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429299636_dvoc0xmal",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429331536_9gr8e1c5n": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429331536_9gr8e1c5n",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429373599_5yu5rhvw9": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429373599_5yu5rhvw9",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429434797_o85h8xncb": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429434797_o85h8xncb",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429466444_v5d1cb6tv": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429466444_v5d1cb6tv",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429572129_iwyyvc70z": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429572129_iwyyvc70z",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429578151_15lzad401": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429578151_15lzad401",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777429578160_c29glwjrk": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429578160_c29glwjrk",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429578161_mad2zn7m7": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429578161_mad2zn7m7",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777429578164_3ummeeor3": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429578164_3ummeeor3",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [
+      "observer",
+      "factory",
+      "singleton",
+      "inheritance",
+      "async_pattern",
+      "error_handling"
+    ],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [
+      "single_instance"
+    ],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777429587588_lm18ov201": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777429587588_lm18ov201",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777430584044_raoqpbyyn": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430584044_raoqpbyyn",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777430584055_ypj2on446": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430584055_ypj2on446",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777430584056_dm7300amm": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430584056_dm7300amm",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777430584058_bhd46kbpc": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430584058_bhd46kbpc",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [
+      "observer",
+      "factory",
+      "singleton",
+      "inheritance",
+      "async_pattern",
+      "error_handling"
+    ],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [
+      "single_instance"
+    ],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777430761003_a0y65q8hd": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430761003_a0y65q8hd",
+    "intent": {
+      "primary": "functional",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [],
+    "requirements": [],
+    "constraints": [],
+    "improvements": []
+  },
+  "artifact_1777430761015_tfw61q0ya": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430761015_tfw61q0ya",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777430761017_gkclvok4f": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430761017_gkclvok4f",
+    "intent": {
+      "primary": "functional, debug",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  },
+  "artifact_1777430761020_fe14lmy6l": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430761020_fe14lmy6l",
+    "intent": {
+      "primary": "object_oriented, functional, async, modular, library, debug, network, browser, node",
+      "secondary": "observer, factory, singleton, inheritance, async_pattern, error_handling",
+      "implicit": "modular"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "canTransform": true,
+      "canIntegrate": true
+    },
+    "patterns": [
+      "observer",
+      "factory",
+      "singleton",
+      "inheritance",
+      "async_pattern",
+      "error_handling"
+    ],
+    "resonance": {
+      "primaryGate": 1,
+      "circuitFamily": "knowing",
+      "architecture": "DFF"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      },
+      {
+        "type": "complexity",
+        "severity": "high",
+        "message": "High function count"
+      }
+    ],
+    "requirements": [
+      "module_system",
+      "async_runtime",
+      "dom_api",
+      "node_runtime"
+    ],
+    "constraints": [
+      "single_instance"
+    ],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      },
+      {
+        "issue": "complexity",
+        "suggestion": "Extract functions into modules",
+        "autoFixable": false
+      }
+    ]
+  },
+  "artifact_1777430838854_7zeomryth": {
+    "type": "morph_contract",
+    "version": "1.1",
+    "artifactId": "artifact_1777430838854_7zeomryth",
+    "intent": {
+      "primary": "functional, debug, node",
+      "secondary": "none",
+      "implicit": "standalone"
+    },
+    "capabilities": {
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": false,
+      "canDelete": false,
+      "canTransform": false,
+      "canIntegrate": false
+    },
+    "patterns": [],
+    "resonance": {
+      "primaryGate": 4,
+      "circuitFamily": "understanding",
+      "architecture": "LSM"
+    },
+    "issues": [
+      {
+        "type": "debug_code",
+        "severity": "low",
+        "message": "Debug console.log found"
+      },
+      {
+        "type": "legacy_var",
+        "severity": "medium",
+        "message": "Use var instead of let/const"
+      },
+      {
+        "type": "loose_equality",
+        "severity": "medium",
+        "message": "Loose equality (==), use strict (===)"
+      }
+    ],
+    "requirements": [
+      "node_runtime"
+    ],
+    "constraints": [],
+    "improvements": [
+      {
+        "issue": "debug_code",
+        "suggestion": "Remove or replace with proper logging",
+        "autoFixable": true
+      },
+      {
+        "issue": "legacy_var",
+        "suggestion": "Replace var with let",
+        "autoFixable": true
+      },
+      {
+        "issue": "loose_equality",
+        "suggestion": "Replace == with ===",
+        "autoFixable": true
+      }
+    ]
+  }
+}

@@ -1,8 +1,12 @@
-# Consciousness Fields - 3D Sandbox Game
+# Morphing OS — Embodied Agent World
 
 ## Overview
 
-Consciousness Fields is a 3D interactive sandbox game built with React Three Fiber that explores different aspects of consciousness through an immersive gameplay experience. Players navigate a 3D world as a customizable avatar, interacting with NPCs, completing quests, and developing traits across multiple "consciousness fields" (Mind, Heart, Body, etc.). The game features real-time 3D graphics, particle effects, gamepad support, and a progression system based on experience and field mastery.
+Morphing OS is a dual-mode application combining a **3D Embodied Agent World** (the primary view) and a **Consciousness Fields Game** (toggled via header). The agent world simulates autonomous embodied agents that walk, socialize, and grow across named zones — including product zones that mirror a website's offerings. The app uses a dark, product-website aesthetic with a sidebar showing live agent stats, product zones, and messages.
+
+### Modes
+- **Agent World** (default): Autonomous agent simulation in a 3D world. Agents spawn, walk between zones, socialize, and evolve consciousness. Camera modes: Orbit / Follow / POV.
+- **Game**: Original consciousness fields sandbox game with player avatar, NPCs, quests, and trait system.
 
 ## User Preferences
 

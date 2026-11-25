@@ -1,0 +1,128 @@
+name: Restore ConsciousnessRealm from Drive
+on:
+  push:
+    paths:
+      - '.github/workflows/restore-consciousnessrealm.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: consciousnessrealm-restore
+  cancel-in-progress: false
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+      - name: Download and verify the 21 original ZIP parts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/consciousness-parts"
+          python -m pip install --disable-pip-version-check gdown
+          python - <<'PY'
+          import concurrent.futures, os, pathlib, zipfile, gdown
+          ids = """1rupNVaOIq2V7CE7mQn2BRbQceUAEHbyd
+          1syQTcnBmVQ_-csbyX7ambTTyvJIUyWUW
+          1xCcu4NxVSL70gJ0fsLfxkH-UdwUJyP3W
+          1hPcrzfTouoy-EisO8DJV_wYoTaI_TsLU
+          11Amq1xshB-SEGJENXvUoNPDS-TFgFfy-
+          1pFbgY7ZefFvkEZP19RwNUzNCMNspvwZj
+          1Dznw3Ix9nxxCQP2w9CFpGRAj7_zhr6yv
+          1f0fYrK4H7TD1Z2BVJtc3eBrWkchYIqfB
+          1Cws93Cb2DYb3Jv8suIlYrG08qgPn12A3
+          1FzPavSoUjm3qBopcnRELpwj6yJ6MxqBf
+          1LoSwapF2zJeIm6aSj6TGx1D5JIszVPB3
+          1WBvqr36TRKrPM6tvOws7xtty9iMgW1Zs
+          18G0jG36pet0aGZRCreNBurQs1trAVaya
+          1P4xF7NbKBEuew3kqCmAMlLyeOnbs1TL-
+          1viH4OQQZlorfUyyKTHyy__uf3OTMhv75
+          1sjkXCK8BQnHsA6qItVACF75hOyR2FKqc
+          1SXMXRzRkV54v8aL8ge1vH5RxUvhlVWvB
+          1utqMKUXPaErEB1YKtX1mjQHoMD6-IMCt
+          1_xbyY_VKzKwpJV2CQQ1p_faV21W8tt0b
+          14dBVkiDfe0ySeaB7cG-HlKwFRi5B7swx
+          1q8aQeOi0MZkH0nr8sZ0QahGa8EklHj3_""".split()
+          base = pathlib.Path(os.environ["RUNNER_TEMP"]) / "consciousness-parts"
+          def download(item):
+              i, file_id = item
+              target = base / f"ConsciousnessRealm_GitHub_{i:02}.zip"
+              if not gdown.download(id=file_id, output=str(target), quiet=True):
+                  raise RuntimeError(f"Download failed: {i}")
+              if not zipfile.is_zipfile(target):
+                  raise RuntimeError(f"Invalid ZIP: {i}")
+              print(f"Downloaded and validated ZIP {i:02}")
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+              list(ex.map(download, enumerate(ids, 1)))
+          PY
+      - name: Reconstruct and verify every original file
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, pathlib, json, hashlib, zipfile, contextlib, shutil
+          base = pathlib.Path(os.environ["RUNNER_TEMP"]) / "consciousness-parts"
+          parts = sorted(base.glob("*.zip"))
+          assert len(parts) == 21
+          root = base / "restored"
+          root.mkdir(exist_ok=True)
+          with contextlib.ExitStack() as stack:
+              archives = [stack.enter_context(zipfile.ZipFile(p)) for p in parts]
+              manifest_raw = archives[0].read("manifest.json")
+              assert hashlib.sha256(manifest_raw).hexdigest() == "661b099b169599c127a424f67752ba6d4be667981fa492c67277211ad7a2facf"
+              entries = json.loads(manifest_raw)["files"]
+              assert len(entries) == 1057
+              payload = {}
+              for archive in archives:
+                  for name in archive.namelist():
+                      if name.startswith("__payload__/"):
+                          key = name[len("__payload__/"):]
+                          assert key not in payload
+                          payload[key] = (archive, name)
+              for item in entries:
+                  relative = pathlib.PurePosixPath(item["path"])
+                  assert not relative.is_absolute() and ".." not in relative.parts and relative.parts[0] == "ConsciousnessRealm"
+                  target = root.joinpath(*relative.parts)
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  digest = hashlib.sha256()
+                  size = 0
+                  with target.open("wb") as out:
+                      for chunk in item["chunks"]:
+                          archive, name = payload[chunk]
+                          with archive.open(name) as source:
+                              while block := source.read(1024 * 1024):
+                                  digest.update(block)
+                                  size += len(block)
+                                  out.write(block)
+                  assert digest.hexdigest() == item["sha256"] and size == item["size"], relative
+          print(f"Verified {len(entries)} original files by SHA-256")
+          PY
+      - name: Import original Git history and LFS
+        shell: bash
+        env:
+          GIT_LFS_SKIP_SMUDGE: '1'
+        run: |
+          set -euo pipefail
+          source_git="$RUNNER_TEMP/consciousness-parts/restored/ConsciousnessRealm/.git"
+          # Use a clean Git configuration; never run the archived hooks or application.
+          git --git-dir="$source_git" -c core.hooksPath=/dev/null fsck --full --no-reflogs
+          git fetch "$source_git" refs/heads/main:refs/remotes/restored/main refs/heads/replit-agent:refs/remotes/restored/replit-agent
+          test "$(git rev-parse refs/remotes/restored/main)" = c8ff34ad7950397fad19414b73d88d973cb067f7
+          test "$(git rev-parse refs/remotes/restored/replit-agent)" = ea6ae7a4536c068c2e92fed28e25de0518c0390a
+          test "$(git rev-list --count refs/remotes/restored/main refs/remotes/restored/replit-agent)" = 47
+          git lfs install --local
+          mkdir -p .git/lfs/objects
+          cp -a "$source_git/lfs/objects/." .git/lfs/objects/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git lfs push --all origin refs/remotes/restored/main refs/remotes/restored/replit-agent
+          git merge --allow-unrelated-histories --no-ff refs/remotes/restored/main -m "Restore original ConsciousnessRealm source and Git history"
+          git push origin refs/remotes/restored/replit-agent:refs/heads/replit-agent
+          git push origin HEAD:refs/heads/main
+          git ls-remote origin refs/heads/main refs/heads/replit-agent
+          git merge-base --is-ancestor c8ff34ad7950397fad19414b73d88d973cb067f7 HEAD
+          echo "Original Git history and tracked source restored." >> "$GITHUB_STEP_SUMMARY"

@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { embodiedWorldEngine, ingestFileWithKernel } from '../engine/EmbodiedWorldEngine';
+import { embodiedWorldEngine, ingestFileWithKernel, EmbodiedWorldEngine } from '../engine/EmbodiedWorldEngine';
+/* the engine this page is showing — the original by default, or the swarm world beside it */
+let currentEngine: EmbodiedWorldEngine = embodiedWorldEngine;
 import { morphKernel } from '../engine/MorphKernel';
 import type { KernelState, ChannelInstance, RoutePath } from '../engine/MorphKernel';
 import { World3D } from '../components/world/World3D';
@@ -135,7 +137,7 @@ function FileDropZone({
       setProcessing(true);
       for (const file of Array.from(files)) {
         const { artifact, kernelArtifact } = await ingestFileWithKernel(file);
-        embodiedWorldEngine.ingestArtifact(artifact);
+        currentEngine.ingestArtifact(artifact);
         onIngest(artifact);
         // Show CPG summary for last file
         setLastCPG(
@@ -596,15 +598,15 @@ function CreateDialog({ onSubmit, onClose }: { onSubmit: (p: HumanProfile) => vo
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
-export default function AgentWorld() {
-  const [engine] = useState(() => embodiedWorldEngine);
+export default function AgentWorld({ engine: given }: { engine?: EmbodiedWorldEngine } = {}) {
+  const [engine] = useState(() => (currentEngine = given ?? embodiedWorldEngine));
   const [, setTick] = useState(0);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [humanId, setHumanId] = useState<string | null>(null);
   const [cameraMode, setCameraMode] = useState<'orbit' | 'follow' | 'pov'>('orbit');
   const [agentCount, setAgentCount] = useState(0);
-  const [places, setPlaces] = useState(() => Array.from(embodiedWorldEngine.places.values()));
+  const [places, setPlaces] = useState(() => Array.from(engine.places.values()));
   const [activeGates, setActiveGates] = useState<Set<number>>(new Set());
   const [consciousnessLevel, setConsciousnessLevel] = useState(0);
   const [recentArtifacts, setRecentArtifacts] = useState<FileArtifact[]>([]);

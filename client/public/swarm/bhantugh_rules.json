@@ -1,0 +1,901 @@
+{
+ "sources": [
+  "circuit_channels",
+  "circuits_overview",
+  "crystals_neutrinos_centres",
+  "definition_types_roles_lines",
+  "nodes_linknodes_monopole",
+  "planets_roles",
+  "primenode_linknode",
+  "resonance_magic_square",
+  "sleep_design"
+ ],
+ "channels": {
+  "63-4": {
+   "name": "Logic",
+   "keynote": "A design of mental ease mixed with doubt",
+   "circuit": "Collective",
+   "sub": "Logical",
+   "circuitKeynote": "Sharing",
+   "type": "Projected"
+  },
+  "17-62": {
+   "name": "Acceptance",
+   "keynote": "A design of an organisational being",
+   "circuit": "Collective",
+   "sub": "Logical",
+   "circuitKeynote": "Sharing",
+   "type": "Projected"
+  },
+  "31-7": {
+   "name": "The Alpha",
+   "keynote": "A design of leadership, for good or bad",
+   "circuit": "Collective",
+   "sub": "Logical",
+   "circuitKeynote": "Sharing",
+   "type": "Projected"
+  },
+  "15-5": {
+   "name": "Rhythm",
+   "keynote": "A design of being in the flow",
+   "circuit": "Collective",
+   "sub": "Logical",
+   "circuitKeynote": "Sharing",
+   "type": "Generated",
+   "centres": [
+    "Sacral",
+    "G"
+   ]
+  },
+  "9-52": {
+   "name": "Concentration",
+   "keynote": "A design of determination, focus",
+   "circuit": "Collective",
+   "sub": "Logical",
+   "circuitKeynote": "Sharing",
+   "type": "Generated"
+  },
+  "18-58": {
+   "name": "Judgement",
+   "keynote": "A design of insatiability",
+   "circuit": "Collective",
+   "sub": "Logical",
+   "circuitKeynote": "Sharing",
+   "type": "Projected"
+  },
+  "16-48": {
+   "name": "The Wavelength",
+   "keynote": "A design of talent",
+   "circuit": "Collective",
+   "sub": "Logical",
+   "circuitKeynote": "Sharing",
+   "type": "Projected"
+  },
+  "64-47": {
+   "name": "Abstraction",
+   "keynote": "A design of mental activity and clarity",
+   "circuit": "Collective",
+   "sub": "Abstract",
+   "circuitKeynote": "Sharing",
+   "type": "Projected",
+   "centres": [
+    "Head",
+    "Ajna"
+   ]
+  },
+  "11-56": {
+   "name": "Curiosity",
+   "keynote": "A design of a searcher",
+   "circuit": "Collective",
+   "sub": "Abstract",
+   "circuitKeynote": "Sharing",
+   "type": "Projected",
+   "centres": [
+    "Ajna",
+    "Throat"
+   ]
+  },
+  "35-36": {
+   "name": "Transitoriness",
+   "keynote": "A design of being a \u201cJack of all Trades\u201d",
+   "circuit": "Collective",
+   "sub": "Abstract",
+   "circuitKeynote": "Sharing",
+   "type": "Manifested"
+  },
+  "30-41": {
+   "name": "Recognition",
+   "keynote": "A design of focused energy",
+   "circuit": "Collective",
+   "sub": "Abstract",
+   "circuitKeynote": "Sharing",
+   "type": "Projected",
+   "centres": [
+    "Root",
+    "Solar Plexus"
+   ]
+  },
+  "42-53": {
+   "name": "Maturation",
+   "keynote": "A design of balanced development, cyclic",
+   "circuit": "Collective",
+   "sub": "Abstract",
+   "circuitKeynote": "Sharing",
+   "type": "Generated",
+   "centres": [
+    "Root",
+    "Sacral"
+   ]
+  },
+  "46-29": {
+   "name": "Discovery",
+   "keynote": "A design of succeeding where others fail",
+   "circuit": "Collective",
+   "sub": "Abstract",
+   "circuitKeynote": "Sharing",
+   "type": "Generated",
+   "centres": [
+    "Sacral",
+    "G"
+   ]
+  },
+  "33-13": {
+   "name": "The Prodigal",
+   "keynote": "A design of a witness",
+   "circuit": "Collective",
+   "sub": "Abstract",
+   "circuitKeynote": "Sharing",
+   "type": "Projected",
+   "centres": [
+    "G",
+    "Throat"
+   ]
+  },
+  "32-54": {
+   "name": "Transformation",
+   "keynote": "A design of being driven (Ambition)",
+   "circuit": "Communal",
+   "sub": "Willpower",
+   "circuitKeynote": "Support"
+  },
+  "26-44": {
+   "name": "Surrender",
+   "keynote": "A design of a transmitter",
+   "circuit": "Communal",
+   "sub": "Willpower",
+   "circuitKeynote": "Support"
+  },
+  "21-45": {
+   "name": "Money",
+   "keynote": "A design of the materialist",
+   "circuit": "Communal",
+   "sub": "Willpower",
+   "circuitKeynote": "Support"
+  },
+  "40-37": {
+   "name": "Community",
+   "keynote": "A design of being a part seeking a whole",
+   "circuit": "Communal",
+   "sub": "Willpower",
+   "circuitKeynote": "Support"
+  },
+  "49-19": {
+   "name": "Synthesis",
+   "keynote": "A design of sensitivity",
+   "circuit": "Communal",
+   "sub": "Willpower",
+   "circuitKeynote": "Support"
+  },
+  "59-6": {
+   "name": "Mating",
+   "keynote": "A design focused on reproduction (intimacy)",
+   "circuit": "Communal",
+   "sub": "Defence",
+   "circuitKeynote": "Support",
+   "type": "Generated",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Sacral",
+    "Solar Plexus"
+   ]
+  },
+  "27-50": {
+   "name": "Preservation",
+   "keynote": "A design of custodianship (caring)",
+   "circuit": "Communal",
+   "sub": "Defence",
+   "circuitKeynote": "Support",
+   "type": "Generated",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Sacral",
+    "Splenic"
+   ]
+  },
+  "61-24": {
+   "name": "Awareness",
+   "keynote": "A design of a thinker",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Projected",
+   "centres": [
+    "Head",
+    "Ajna"
+   ]
+  },
+  "43-23": {
+   "name": "Structuring",
+   "keynote": "A design of individuality",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Projected",
+   "centres": [
+    "Ajna",
+    "Throat"
+   ]
+  },
+  "8-1": {
+   "name": "Inspiration",
+   "keynote": "A design of a creative role model",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Projected",
+   "centres": [
+    "G",
+    "Throat"
+   ]
+  },
+  "2-14": {
+   "name": "The Beat",
+   "keynote": "A design of being keeper of the keys",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment"
+  },
+  "3-60": {
+   "name": "Mutation",
+   "keynote": "A design of energy which fluctuates and initiates",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Generated",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Root",
+    "Sacral"
+   ]
+  },
+  "28-38": {
+   "name": "Struggle",
+   "keynote": "A design of stubbornness",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Projected",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Root",
+    "Splenic center"
+   ]
+  },
+  "55-39": {
+   "name": "Emoting",
+   "keynote": "A design of moodiness",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Projected",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Root",
+    "Solar Plexus"
+   ]
+  },
+  "20-57": {
+   "name": "The Brain Wave",
+   "keynote": "A design of penetrating awareness",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Projected",
+   "typeSource": "dbhd:section6"
+  },
+  "12-22": {
+   "name": "Openness",
+   "keynote": "A design of a social being",
+   "circuit": "Individualistic",
+   "sub": "Knowing",
+   "circuitKeynote": "Empowerment",
+   "type": "Manifested",
+   "typeSource": "dbhd:section6"
+  },
+  "10-34": {
+   "name": "Exploration",
+   "keynote": "A design of following one\u2019s convictions",
+   "circuit": "Individualistic",
+   "sub": "Centring",
+   "circuitKeynote": "Empowerment"
+  },
+  "25-51": {
+   "name": "Initiation",
+   "keynote": "A design of needing to be first",
+   "circuit": "Individualistic",
+   "sub": "Centring",
+   "circuitKeynote": "Empowerment",
+   "type": "Projected",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Heart",
+    "G"
+   ]
+  },
+  "20-10": {
+   "name": "Awakening",
+   "keynote": null,
+   "circuit": "Self-survival",
+   "sub": null,
+   "circuitKeynote": "Individuation",
+   "type": "Projected",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "G",
+    "Throat"
+   ]
+  },
+  "34-57": {
+   "name": "Power",
+   "type": "Generated",
+   "typeSource": "dbhd:section6"
+  },
+  "34-20": {
+   "name": "Charisma",
+   "type": "Manifesting Generated",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Sacral",
+    "Throat"
+   ]
+  },
+  "57-10": {
+   "name": "Perfected Form",
+   "type": "Projected",
+   "typeSource": "dbhd:section6",
+   "centres": [
+    "Splenic",
+    "G"
+   ]
+  }
+ },
+ "roles": {
+  "1/3": {
+   "name": "Protector/Warrior",
+   "angle": "Right Angle",
+   "Behavioural identity": "Investigator",
+   "Projected attitude": "Authoritarian",
+   "Limited perspective": "Empathy",
+   "Aspired-to role": "Creativity",
+   "Bonding strategy": "Pursuer/Pursued",
+   "Security strategy": "Self-Provider/Coveter",
+   "Nature": "Martyr",
+   "Type": "Anarchist",
+   "Memory": "Pessimism",
+   "Direction": "Sustainment",
+   "Sexuality": "Bonds made and broken",
+   "Humanity": "Bonds made and broken"
+  },
+  "1/4": {
+   "name": "Protector/Opportunist",
+   "angle": "Right Angle",
+   "Behavioural identity": "Investigator",
+   "Projected attitude": "Authoritarian",
+   "Limited perspective": "Empathy",
+   "Aspired-to role": "Creativity",
+   "Bonding strategy": "Pursuer/Pursued",
+   "Security strategy": "Self-Provider/Coveter",
+   "Nature": "Opportunist",
+   "Type": "Abdicator",
+   "Memory": "Fatigue",
+   "Direction": "Aloneness",
+   "Sexuality": "Confidante or not",
+   "Humanity": "Benefactor/Dependant"
+  },
+  "2/4": {
+   "name": "Discoverer/Opportunist",
+   "angle": "Right Angle",
+   "Behavioural identity": "Hermit",
+   "Projected attitude": "Democrat",
+   "Limited perspective": "Bigotry",
+   "Aspired-to role": "Harmony",
+   "Bonding strategy": "Shyness/Boldness",
+   "Security strategy": "Nourisher/Depleter",
+   "Nature": "Opportunist",
+   "Type": "Abdicator",
+   "Memory": "Fatigue",
+   "Direction": "Aloneness",
+   "Sexuality": "Confidante or not",
+   "Humanity": "Benefactor/Dependant"
+  },
+  "2/5": {
+   "name": "Discoverer/Distributor",
+   "angle": "Right Angle",
+   "Behavioural identity": "Hermit",
+   "Projected attitude": "Democrat",
+   "Limited perspective": "Bigotry",
+   "Aspired-to role": "Harmony",
+   "Bonding strategy": "Shyness/Boldness",
+   "Security strategy": "Nourisher/Depleter",
+   "Nature": "Heretic",
+   "Type": "General",
+   "Memory": "Saviour",
+   "Direction": "Attractiveness",
+   "Sexuality": "Seducer/Seduced",
+   "Humanity": "Distributor/Hoarder"
+  },
+  "3/5": {
+   "name": "Warrior/Distributor",
+   "angle": "Right Angle",
+   "Behavioural identity": "Martyr",
+   "Projected attitude": "Anarchist",
+   "Limited perspective": "Pessimism",
+   "Aspired-to role": "Sustainment",
+   "Bonding strategy": "Bonds made and broken",
+   "Security strategy": "Bonds made and broken",
+   "Nature": "Heretic",
+   "Type": "General",
+   "Memory": "Saviour",
+   "Direction": "Attractiveness",
+   "Sexuality": "Seducer/Seduced",
+   "Humanity": "Distributor/Hoarder"
+  },
+  "3/6": {
+   "name": "Warrior/Perfectionist",
+   "angle": "Right Angle",
+   "Behavioural identity": "Martyr",
+   "Projected attitude": "Anarchist",
+   "Limited perspective": "Pessimism",
+   "Aspired-to role": "Sustainment",
+   "Bonding strategy": "Bonds made and broken",
+   "Security strategy": "Bonds made and broken",
+   "Nature": "Role Model",
+   "Type": "Administrator",
+   "Memory": "Optimist",
+   "Direction": "Objectivity",
+   "Sexuality": "Soul Mate or not",
+   "Humanity": "Trust or not"
+  },
+  "4/6": {
+   "name": "Opportunist/Perfectionist",
+   "angle": "Right Angle",
+   "Behavioural identity": "Opportunist",
+   "Projected attitude": "Abdicator",
+   "Limited perspective": "Fatigue",
+   "Aspired-to role": "Aloneness",
+   "Bonding strategy": "Confidante or not",
+   "Security strategy": "Benefactor/Dependant",
+   "Nature": "Role Model",
+   "Type": "Administrator",
+   "Memory": "Optimist",
+   "Direction": "Objectivity",
+   "Sexuality": "Soul Mate or not",
+   "Humanity": "Trust or not"
+  },
+  "4/1": {
+   "name": "Opportunist/Protector",
+   "angle": "Juxtaposition",
+   "Behavioural identity": "Opportunist",
+   "Projected attitude": "Abdicator",
+   "Limited perspective": "Fatigue",
+   "Aspired-to role": "Aloneness",
+   "Bonding strategy": "Confidante or not",
+   "Security strategy": "Benefactor/Dependant",
+   "Nature": "Investigator",
+   "Type": "Authoritarian",
+   "Memory": "Empathy",
+   "Direction": "Creativity",
+   "Sexuality": "Pursuer/Pursued",
+   "Humanity": "Self-Provider/Coveter"
+  },
+  "5/1": {
+   "name": "Distributor/Protector",
+   "angle": "Left Angle",
+   "Behavioural identity": "Heretic",
+   "Projected attitude": "General",
+   "Limited perspective": "Saviour",
+   "Aspired-to role": "Attractiveness",
+   "Bonding strategy": "Seducer/Seduced",
+   "Security strategy": "Distributor/Hoarder",
+   "Nature": "Investigator",
+   "Type": "Authoritarian",
+   "Memory": "Empathy",
+   "Direction": "Creativity",
+   "Sexuality": "Pursuer/Pursued",
+   "Humanity": "Self-Provider/Coveter"
+  },
+  "5/2": {
+   "name": "Distributor/Discoverer",
+   "angle": "Left Angle",
+   "Behavioural identity": "Heretic",
+   "Projected attitude": "General",
+   "Limited perspective": "Saviour",
+   "Aspired-to role": "Attractiveness",
+   "Bonding strategy": "Seducer/Seduced",
+   "Security strategy": "Distributor/Hoarder",
+   "Nature": "Hermit",
+   "Type": "Democrat",
+   "Memory": "Bigotry",
+   "Direction": "Harmony",
+   "Sexuality": "Shyness/Boldness",
+   "Humanity": "Nourisher/Depleter"
+  },
+  "6/2": {
+   "name": "Perfectionist/Discoverer",
+   "angle": "Left Angle",
+   "Behavioural identity": "Role Model",
+   "Projected attitude": "Administrator",
+   "Limited perspective": "Optimist",
+   "Aspired-to role": "Objectivity",
+   "Bonding strategy": "Soul mate or not",
+   "Security strategy": "Trust or not",
+   "Nature": "Hermit",
+   "Type": "Democrat",
+   "Memory": "Bigotry",
+   "Direction": "Harmony",
+   "Sexuality": "Shyness/Boldness",
+   "Humanity": "Nourisher/Depleter"
+  },
+  "6/3": {
+   "name": "Perfectionist/Warrior",
+   "angle": "Left Angle",
+   "Behavioural identity": "Role Model",
+   "Projected attitude": "Administrator",
+   "Limited perspective": "Optimist",
+   "Aspired-to role": "Objectivity",
+   "Bonding strategy": "Soul mate or not",
+   "Security strategy": "Trust or not",
+   "Nature": "Martyr",
+   "Type": "Anarchist",
+   "Memory": "Pessimism",
+   "Direction": "Sustainment",
+   "Sexuality": "Bonds made and broken",
+   "Humanity": "Bonds made and broken"
+  }
+ },
+ "bardo": {
+  "stages": [
+   "Time",
+   "Surrender",
+   "Chaos",
+   "Passage",
+   "Reunion",
+   "Vision"
+  ],
+  "trinaries": [
+   [
+    "Time",
+    "Surrender",
+    "Chaos"
+   ],
+   [
+    "Surrender",
+    "Chaos",
+    "Passage"
+   ],
+   [
+    "Chaos",
+    "Passage",
+    "Reunion"
+   ],
+   [
+    "Passage",
+    "Reunion",
+    "Vision"
+   ],
+   [
+    "Reunion",
+    "Vision",
+    "Time"
+   ],
+   [
+    "Vision",
+    "Time",
+    "Surrender"
+   ]
+  ]
+ },
+ "centres": {
+  "Head Centre": {
+   "theme": "Inspiration"
+  },
+  "Ajna Centre": {
+   "theme": "Thinking"
+  },
+  "Throat Centre": {
+   "theme": "Manifestation"
+  },
+  "G Centre": {
+   "theme": "Love and Identity"
+  },
+  "Willpower Centre": {
+   "theme": "Motor"
+  },
+  "Sacral Centre": {
+   "theme": "Life-force \u2013 Motor"
+  },
+  "Solar Plex": {
+   "theme": "Emotions \u2013 Motor"
+  },
+  "Splenic Centre": {
+   "theme": "Instinct"
+  },
+  "Root Centre": {
+   "theme": "Pressure \u2013 Motor"
+  }
+ },
+ "connections": {
+  "electromagnetic": "each defines one gate of the channel",
+  "dominance": "one defines the whole channel, other neither gate",
+  "compromise": "one defines the whole channel, other only one gate",
+  "companionship": "both define the same channel or gate",
+  "source": "dbhd:connection charts"
+ },
+ "centreKinds": {
+  "manifestation": [
+   "Throat"
+  ],
+  "pressure": [
+   "Head",
+   "Root"
+  ],
+  "awareness": [
+   "Splenic",
+   "Ajna",
+   "Solar Plexus"
+  ],
+  "motor": [
+   "Root",
+   "Solar Plexus",
+   "Sacral",
+   "Heart"
+  ],
+  "identity": [
+   "G"
+  ],
+  "source": "dbhd:section two"
+ },
+ "dimensions": {
+  "order": [
+   "Movement",
+   "Evolution",
+   "Being",
+   "Design",
+   "Space"
+  ],
+  "Movement": {
+   "base": 1,
+   "mark": "3",
+   "human": "Individuality",
+   "component": "Magnetic Monopole",
+   "centre": "G",
+   "keynote": "I Define / I Create",
+   "polarity": "Yang/Yang",
+   "mode": "Reactive",
+   "question": "Where?",
+   "sense": "Seeing",
+   "function": "Location",
+   "job": "to measure, to name",
+   "chain": [
+    "Energy",
+    "Creation",
+    "Seeing",
+    "Landscape",
+    "Environment"
+   ],
+   "crystal": null
+  },
+  "Evolution": {
+   "base": 2,
+   "mark": "\u0190",
+   "human": "Mind",
+   "component": "Personality Crystal",
+   "centre": "Head",
+   "keynote": "I Remember",
+   "polarity": "Yang/Yin",
+   "mode": "Integrative",
+   "question": "What?",
+   "sense": "Taste",
+   "function": "Identification",
+   "job": "transgenerational consciousness",
+   "chain": [
+    "Gravity",
+    "Memory",
+    "Taste",
+    "Love",
+    "Light"
+   ],
+   "crystal": "Personality"
+  },
+  "Being": {
+   "base": 3,
+   "mark": "M",
+   "human": "Body",
+   "component": "The Atom",
+   "centre": "Ajna (Design Crystal)",
+   "keynote": "I Am",
+   "polarity": "Yin/Yin",
+   "mode": "Objective",
+   "question": "When?",
+   "sense": "Touching",
+   "function": "Collaboration",
+   "job": "Genetics; Matter is Being",
+   "chain": [
+    "Matter",
+    "Touch",
+    "Sex",
+    "Survival"
+   ],
+   "crystal": "Design"
+  },
+  "Design": {
+   "base": 4,
+   "mark": "\u25c6",
+   "human": "Ego",
+   "component": "Design Crystal",
+   "centre": "Ajna",
+   "keynote": "I Design",
+   "polarity": "Yin/Yang",
+   "mode": "Progressive",
+   "question": "Why?",
+   "sense": "Smell",
+   "function": "Manifestation",
+   "job": "information feed",
+   "chain": [
+    "Structure",
+    "Progress",
+    "Smell",
+    "Life",
+    "Art"
+   ],
+   "crystal": "Design"
+  },
+  "Space": {
+   "base": 5,
+   "mark": null,
+   "human": "Personality",
+   "component": "Personality Crystal",
+   "centre": "Head",
+   "keynote": "I Think / I Communicate",
+   "polarity": null,
+   "mode": "Subjective",
+   "question": "Who?",
+   "sense": "Hearing",
+   "function": "Mutation",
+   "job": "Communication; Presence",
+   "chain": [
+    "Form",
+    "Illusion",
+    "Hearing",
+    "Music",
+    "Freedom"
+   ],
+   "crystal": "Personality",
+   "note": "Not counted in the four-dimension chart's rows; counted across, in the Basic Component column, inside the Personality Crystal alongside Evolution (Light is a property of Evolution and shows up there)."
+  },
+  "levels": "Gate > Line > Color > Tone > Base",
+  "source": "user page images: Rave chart pp.5,115; base/color/tone tables p.40"
+ },
+ "colors": {
+  "1": {
+   "response": "Fear",
+   "mode": [
+    "Communalist",
+    "Separatist"
+   ],
+   "binary": "Splenic"
+  },
+  "2": {
+   "response": "Hope",
+   "mode": [
+    "Theist",
+    "Anti-theist"
+   ],
+   "binary": "Splenic"
+  },
+  "3": {
+   "response": "Desire",
+   "mode": [
+    "Leader",
+    "Follower"
+   ],
+   "binary": "Ajna"
+  },
+  "4": {
+   "response": "Need",
+   "mode": [
+    "Master",
+    "Novice"
+   ],
+   "binary": "Ajna"
+  },
+  "5": {
+   "response": "Guilt",
+   "mode": [
+    "Conditioner",
+    "Conditioned"
+   ],
+   "binary": "Solar Plexus"
+  },
+  "6": {
+   "response": "Innocence",
+   "mode": [
+    "Observer",
+    "Observed"
+   ],
+   "binary": "Solar Plexus"
+  }
+ },
+ "tones": {
+  "1": {
+   "theme": "Security",
+   "sense": "Smell",
+   "binary": "Splenic"
+  },
+  "2": {
+   "theme": "Uncertainty",
+   "sense": "Taste",
+   "binary": "Splenic"
+  },
+  "3": {
+   "theme": "Action",
+   "sense": "Outer Vision",
+   "binary": "Ajna"
+  },
+  "4": {
+   "theme": "Meditation",
+   "sense": "Inner Vision",
+   "binary": "Ajna"
+  },
+  "5": {
+   "theme": "Judgement",
+   "sense": "Feeling",
+   "binary": "Solar Plexus"
+  },
+  "6": {
+   "theme": "Acceptance",
+   "sense": "Touch",
+   "binary": "Solar Plexus"
+  }
+ },
+ "components": {
+  "Magnetic Monopole": {
+   "role": "The Attractor",
+   "centre": "G",
+   "holds": [
+    "Movement"
+   ],
+   "keynote": "I Create",
+   "swarm": "pull home / attraction"
+  },
+  "Design Crystal": {
+   "role": "The Vehicle",
+   "centre": "Ajna",
+   "binary": {
+    "Body": "Being",
+    "Ego": "Design"
+   },
+   "swarm": "function side: Being half = The Atom = particle physics (touch); Ego half = structure, growth, decay = cluster rules"
+  },
+  "Personality Crystal": {
+   "role": "The Witness",
+   "centre": "Head",
+   "binary": {
+    "Mind": "Evolution",
+    "Personality": "Space"
+   },
+   "swarm": "form side: remembers (Evolution, Light) and shows (Space)"
+  },
+  "source": "user page images: crystals and monopole p.5; four-dimension chart"
+ }
+}

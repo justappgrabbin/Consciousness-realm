@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import { createRealmOrganism, growCapacityResident } from '../client/public/swarm/realm-capacity.js';
+const O = createRealmOrganism();
+const first = growCapacityResident(O);
+assert.equal(first.report.ok,true);
+assert.equal(first.report.steps.find(s=>s.step==='construct').by,'units');
+assert.equal(first.report.steps.find(s=>s.step==='extract').unitsStillCarrying,0);
+assert.equal(O.morphMemory.formations.length,1);
+const p={id:'garden',capacity:2,currentAgents:[]}, a={currentPlace:'library'};
+assert.equal(first.resident(p,a),true);
+p.currentAgents.push('a','b'); assert.equal(first.resident(p,a),false);
+a.currentPlace='garden'; assert.equal(first.resident(p,a),true);
+a.currentPlace='library'; p.currentAgents.pop(); assert.equal(first.resident(p,a),true);
+const second=growCapacityResident(O,'canEnterAgain');
+assert.equal(second.report.ok,true); assert.equal(O.morphMemory.formations.length,2);
+assert.equal(second.report.steps.find(s=>s.step==='construct').recalled,true);
+console.log(JSON.stringify({units:O.S.units.length, first:first.report.steps, reuse:second.report.steps, source:first.source},null,2));
+console.log('11 native habitat assertions passed');

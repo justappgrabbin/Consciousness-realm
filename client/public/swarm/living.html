@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Living swarm</title>
+<style>
+ body{margin:0;background:#0d0d12;color:#ddd;font:13px/1.4 system-ui,sans-serif;display:flex;flex-direction:column;height:100vh}
+ header{padding:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #222}
+ button,select{background:#1b1b24;color:#ddd;border:1px solid #333;border-radius:6px;padding:6px 10px}
+ canvas{flex:1;min-height:0;width:100%;touch-action:none} #info{padding:8px;height:30vh;overflow:auto;box-sizing:border-box;border-top:1px solid #222;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
+</style><script>/* child storage: ?child=N gets its own prefixed storage, seeded once from the parent's pack (child.js) */
+(()=>{const n=new URLSearchParams(location.search).get("child");if(!n)return;const P="child-"+n+":",S=Storage.prototype,g=S.getItem,s=S.setItem,r=S.removeItem;
+const own=k=>k.startsWith("synthia-child:")?k:P+k;S.getItem=function(k){return g.call(this,own(k))};S.setItem=function(k,v){return s.call(this,own(k),v)};S.removeItem=function(k){return r.call(this,own(k))};
+const pack=JSON.parse(g.call(localStorage,"synthia-child:"+n)||"null");if(!pack)return;window.__GENOME=pack.genome;
+if(!g.call(localStorage,P+"seeded")){for(const[k,v]of Object.entries(pack.inherit))if(v!=null)s.call(localStorage,P+k,JSON.stringify(v));s.call(localStorage,P+"seeded","1");}
+const st=document.createElement("style");st.textContent=pack.look;document.head.appendChild(st);document.title="Living swarm — child "+n;})();</script>
+</head><body>
+<header>
+ <select id="lead"><option value="auto">Lead: auto</option><option>Movement</option><option>Evolution</option><option>Being</option><option>Design</option></select>
+ <label style="border:1px solid #556;border-radius:6px;padding:6px 10px">Give it something<input id="any" type="file" multiple hidden></label><label><input id="manual" type="checkbox"> manual</label><span id="man" style="display:none;gap:6px;flex-wrap:wrap"><button id="run">Pause</button><button id="drop">Drop a loose item</button><button id="speak">Speak</button><button id="play">Play</button><label style="border:1px solid #333;border-radius:6px;padding:6px 10px">Picture<input id="pic" type="file" accept="image/*" multiple hidden></label><label style="border:1px solid #333;border-radius:6px;padding:6px 10px">Reskin<input id="skin" type="file" accept="image/*" hidden></label><button id="rel">Release</button><button id="focus">Focus on picked</button><label style="border:1px solid #333;border-radius:6px;padding:6px 10px">Take in files<input id="files" type="file" multiple hidden></label><button id="words">Words</button><button id="exp">Export memory</button><label style="border:1px solid #333;border-radius:6px;padding:6px 10px">Import memory<input id="imp" type="file" accept=".json,application/json" hidden></label></span><span id="st"></span>
+</header>
+<canvas id="c"></canvas>
+<div id="info">Tap a unit once to see what touching it will do. Tap it again to touch it.</div>
+<div id="faces" style="padding:6px 10px;font-size:13px;color:#dfc"></div>
+<div id="world" style="padding:6px 10px;font-size:13px;color:#fdc"></div>
+<div style="padding:6px 10px"><button id="tellme">Tell me what happened</button> <span id="cwstat" style="font-size:12px;color:#cdf"></span></div><div id="story" style="padding:6px 10px;font-size:13px;color:#eee"></div>
+<div id="kern" style="padding:6px 10px;font-size:13px;color:#dcf"></div>
+<div id="nn" style="padding:6px 10px;font-size:13px;color:#fcd"></div>
+<div id="rules" style="padding:6px 10px;font-size:13px;color:#cfd"></div>
+<div id="life" style="padding:6px 10px;font-size:13px;color:#cfe"></div>
+<div style="padding:6px 10px;display:flex;gap:6px;flex-wrap:wrap"><input id="ask" placeholder="look something up, or owner/repo" style="flex:1;min-width:180px;background:#11131a;color:#dde;border:1px solid #445;border-radius:6px;padding:6px">
+<button id="lookup">Look it up</button><button id="repo">Learn from repo</button></div><div id="found" style="padding:6px 10px;font-size:13px;color:#cde"></div>
+<div style="padding:6px 10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><b style="color:#cfe;font-size:13px">Bookshelf</b>
+<input id="books" type="file" accept="application/pdf,.pdf,.txt" multiple style="color:#cde;max-width:210px">
+<select id="bookfield"><option>Movement</option><option>Evolution</option><option>Being</option><option>Design</option></select>
+<button id="shelve">Put on shelf</button><button id="teach">Read the shelf</button></div><div id="shelfout" style="padding:6px 10px;font-size:13px;color:#cde"></div>
+<div style="padding:6px 10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><b style="color:#cfe;font-size:13px">Birth</b><input id="bdate" type="date"><input id="btime" type="time" value="12:00"><input id="bzone" placeholder="time zone e.g. America/Los_Angeles" style="min-width:200px"><button id="bgo">Build from my four charts</button><span id="bstat" style="font-size:12px;color:#cde"></span></div>
+<div style="padding:6px 10px;display:flex;gap:6px;flex-wrap:wrap"><input id="childx" placeholder="extra instructions for the child (optional)" style="flex:1;min-width:180px;background:#11131a;color:#dde;border:1px solid #445;border-radius:6px;padding:6px"><button id="child">Build another me</button></div><div id="childout" style="padding:6px 10px;font-size:13px;color:#cde"></div>
+<script type="module">
+// Renderer only reads the swarm and passes touches in; the swarm does everything itself.
+import { LivingSwarm } from "./living.js"; window.__S = null;
+import { loadVocabulary, dressAll } from "./vocabulary.js"; await loadVocabulary();
+import { addressOf } from "./address.js";
+import { readThrough, readThroughOrb, fineFromCell, qualitiesOfState, carriedSections } from "./fourfold.js";
+import { Experience, packFormation } from "./experience.js";
+import { classifyMap, combineMaps, LEVEL_OF_MAP } from "./maps.js";
+import { SwarmKlein, partKind } from "./klein_bridge.js";
+import { readJob, JobWave } from "./jobs.js";
+import { Needs, act } from "./needs.js";
+import { readFile, gossipGrammar } from "./reading.js";
+import { lookUp, Corpus } from "./research.js";
+import { repoFiles, harvest, adopt } from "./repo_abilities.js";
+import { Chamber } from "./chamber.js";
+import { pdfText, splitByGate, shelve, shelf, teach } from "./bookshelf.js";
+import { lifecycle, discover, observe } from "./lifecycle.js";
+const LIB = JSON.parse(localStorage.getItem("synthia-library") || '{"entries":{}}'); window.__LIB = LIB;
+import { parseGLB, sampleSurface, project } from "./glb.js";
+import { cornersOf, warp } from "./warp.js";
+import { readScene } from "./scene.js";
+const N = new Needs(JSON.parse(localStorage.getItem("synthia-needs") || "null")); window.__N = N;
+const saveN = () => { try { localStorage.setItem("synthia-needs", JSON.stringify(N.export())); } catch {} };
+import { readFormation, FormationMemory } from "./formation.js";
+import * as KL from "./klein_local.js";
+import { OrganismSwarm, loadRecognizer } from "./organism_swarm.js";   // all pieces on the same units   // Klein inside each unit (instinct + its own culture, rules by contact)
+const FM = new FormationMemory(JSON.parse(localStorage.getItem("synthia-formations") || "[]"));
+// which units make the shape: in a picture, the ones that settled in the deeper layers (2+); radius 1.6 squares (Badalov's MEDIUM r)
+function shapeNow() { const P = window.__pix; if (!P || !S.image) return null;
+  const pts = S.units.filter(u => !u.broken && u.target && u.target.layer >= 2).map(u => ({ x: u.target.x * P.w, y: u.target.y * P.h }));
+  return pts.length ? readFormation(pts, 1.6).whole : null; }
+window.__hasColor = null;
+const K = new SwarmKlein(); try { K.import(JSON.parse(localStorage.getItem("synthia-klein") || "null")); } catch {}
+const saveK = () => { try { localStorage.setItem("synthia-klein", JSON.stringify(K.export())); } catch {} };
+const EXP = await new Experience().open(); let remembered = (await EXP.all()).length, picName = "";
+const lons = (await (await fetch("./check_chart.json")).json()).lons;
+const S = new LivingSwarm(); window.__S = S; setInterval(() => dressAll(S), 1500);   /* every unit wears its gate's words (new units too) */
+/* faces: the harvested functions, worn by units; which gate they belong to is earned by use, in the chamber */
+import { Faces, loadFaces } from "./faces.js";
+const FA = new Faces(await loadFaces(), new Chamber(), (() => { try { return JSON.parse(localStorage.getItem("synthia-faces") || "null"); } catch { return null; } })()); window.__FA = FA;
+setInterval(async () => { const r = await FA.tick(S); if (!r) return; try { localStorage.setItem("synthia-faces", JSON.stringify(FA.export())); } catch {}
+  const P = FA.placement(), g = Object.keys(P).length, worn = S.units.filter(u => u.face).length;
+  document.getElementById("faces").textContent = `faces: ${FA.list.length} functions · ${FA.tries} tries · ${worn} units wearing one · placed on ${g} gate(s) · ${Object.keys(FA.repertoire()).length} kinds of job learned` +
+    ` · last: gate ${r.gate} tried ${r.face} ${r.good ? "✓" : "✗"}`; }, 500);
+/* MESSY is the world: units become facts each second, MESSY's own clock and rule groups run on them; DISEMINER reads the world */
+import { MessyWorld } from "./messy_world.js";
+const MW = new MessyWorld(); window.__MW = MW;
+setInterval(() => { const r = MW.tick(S); if (MW.k.clock % 10 === 0) MW.readWorld();
+  document.getElementById("world").textContent = `world (MESSY): clock ${MW.k.clock} · ${MW.k.active().length} live facts · ${MW.k.triples.length} in history · ${Object.keys(MW.k.groups).length} rule group(s), ${r.firings} fired · DISEMINER read ${MW.fed} links`; }, 1000);
+/* the Klein computer (klein-computer.zip: full MESSY + ATO + AutoNovel) runs alongside: units told in as facts, AutoNovel tells it */
+import { ComputerWorld } from "./computer_world.js";
+const CW = new ComputerWorld(); window.__CW = CW;
+setInterval(() => { try { CW.sync(S); const st = CW.stats(); document.getElementById("cwstat").textContent = `Klein computer: ${st.atoms} atoms · ${st.live} true now · ${st.told} told`; } catch (e) { document.getElementById("cwstat").textContent = "Klein computer: " + e.message; } }, 2000);
+document.getElementById("tellme").onclick = () => { const t = CW.narrate(); document.getElementById("story").textContent = t || "(nothing new since last time)"; };
+/* the rule book drives contact: touch by reach, cross by resonance, carry faces by channel exchange, wear, mood */
+import { RuleWorld } from "./rule_world.js";
+const RW = await RuleWorld.ready(); window.__RW = RW;
+setInterval(() => { const st = RW.tick(S), live = S.units.filter(u => !u.broken && typeof u.mood === "number"), mood = live.length ? live.reduce((n, u) => n + u.mood, 0) / live.length : 0;
+  document.getElementById("rules").textContent = `rules: ${st.contacts} touches · ${st.crossed} crossed (${st.blind} blind-spot) · ${st.worn} wore · ${st.carried} functions carried · mood ${(mood * 100).toFixed(0)}%`; }, 250);
+/* anyone's four charts (charts.js): ?date=YYYY-MM-DD&time=HH:MM&zone=Area/City — Movement = Draconic mean node,
+   Design = Draconic true node, Being = Tropical, Evolution = Sidereal; each unit carries the field its chart belongs to.
+   Without birth data the sample chart is used (labelled as the sample). */
+const BIRTH = Object.fromEntries(new URLSearchParams(location.search)); let CHARTS = null;
+if (BIRTH.date) { try { const { fourCharts } = await import("./charts.js"); CHARTS = fourCharts({ date: BIRTH.date, time: BIRTH.time || "12:00", zone: BIRTH.zone || "UTC" });
+    for (const c of Object.values(CHARTS.charts)) c.addresses.forEach((a, i) => S.add(a, i % 13 < 2 ? "person" : i % 13 < 5 ? "attractor" : i % 13 < 9 ? "mover" : "item"));
+  } catch (e) { console.warn("charts:", e); CHARTS = null; } }
+if (!CHARTS) lons.forEach((l, i) => S.add({ ...addressOf(i, l, 100), field: "sample chart" }, i < 4 ? "person" : i < 8 ? "attractor" : i < 14 ? "mover" : "item"));
+/* all 64 gates are always in the swarm (user, Nov 24): the chart's gates are active; the rest are present but latent — not
+   activated, still part of the whole, and available when the swarm builds. Latent units are items marked latent. */
+{ const have = new Set(S.units.map(u => u.address.gate)), D = ["Movement", "Evolution", "Being", "Design"]; let k = 0;
+  for (let g = 1; g <= 64; g++) if (!have.has(g)) { const u = S.add({ gate: g, line: 1 + k % 6, color: 1 + k % 6, tone: 1 + k % 6, base: 1 + k % 5, dimension: D[k % 4] }, "item"); u.latent = true; k++; } }
+
+// the colour a unit shows in a picture (same rule used to draw it and to remember it)
+function colorOf(u, P, cxl, cyl) {
+  if (u.q.qualities.includes("color")) return readThroughOrb(u.address.dimension, P.d, P.w, P.h, cxl, cyl);
+  const pat = [[0, 1], [0, -1], [1, 0], [1, 1], [1, -1], [-1, 0], [0, 2], [0, -2]]; let R = 0, G = 0, B = 0, N = 0;
+  for (const [dx, dy] of pat) { const xx = cxl + dx, yy = cyl + dy; if (xx < 0 || yy < 0 || xx >= P.w || yy >= P.h || !(window.__hasColor && __hasColor[yy * P.w + xx])) continue;
+    const qq = (yy * P.w + xx) * 4; R += P.d[qq]; G += P.d[qq + 1]; B += P.d[qq + 2]; N++; }
+  return N ? [R / N, G / N, B / N].map(Math.round) : readThroughOrb("Movement", P.d, P.w, P.h, cxl, cyl);
+}
+async function rememberNow() {
+  const P = window.__pix; if (!P || !S.image) return;
+  const live = S.units.filter(u => !u.broken && u.target);
+  const rec = packFormation({ name: picName, w: P.w, h: P.h, leader: S.leader, units: live, ascii: S.image.text,
+    bonds: live.reduce((n, u) => n + u.bonds.length, 0) / 2, visible: live.reduce((n, u) => n + u.bonds.filter(e => e.visible).length, 0) / 2,
+    colorAt: u => colorOf(u, P, Math.min(P.w - 1, Math.floor(u.target.x * P.w)), Math.min(P.h - 1, Math.floor(u.target.y * P.h))) });
+  const shape = shapeNow(), seen = shape && FM.recognize(shape);
+  window.__lastShape = seen ? `${seen.name} (distance ${seen.distance.toFixed(2)})` : "nothing like it before";
+  if (shape) { if (seen) K.learn(["became", seen.name, picName]); FM.remember(picName, shape); try { localStorage.setItem("synthia-formations", JSON.stringify(FM.export())); } catch {} }
+  await EXP.add(rec); remembered++; S.recorded = true; K.learn(["form", "picture", S.leader]); saveK();
+}
+const cv = document.getElementById("c"), cx = cv.getContext("2d"), info = document.getElementById("info"), st = document.getElementById("st");
+let running = true, armed = null;
+const px = u => [u.x * cv.width * 0.9 + cv.width * 0.05, u.y * cv.height * 0.9 + cv.height * 0.05];
+function draw() {
+  cv.width = cv.clientWidth * devicePixelRatio; cv.height = cv.clientHeight * devicePixelRatio; cx.clearRect(0, 0, cv.width, cv.height);
+  const k = devicePixelRatio, live = S.units.filter(u => !u.broken);
+  for (const u of live) for (const e of u.bonds) if (e.a === u.id && e.visible) { const o = S.units[e.b]; if (o.broken) continue;
+    const [x1, y1] = px(u), [x2, y2] = px(o); cx.strokeStyle = `rgba(170,170,210,${0.15 + 0.2 * e.depth})`; cx.lineWidth = k * (0.5 + e.depth);
+    cx.beginPath(); cx.moveTo(x1, y1); cx.lineTo(x2, y2); cx.stroke(); }
+  if (S.mode === "words") {                                       // Movement's words written into the area, in their own colour
+    cx.fillStyle = "#0d0d12"; cx.fillRect(0, 0, cv.width, cv.height); cx.textBaseline = "middle";
+    for (const u of live) { const f = u.four, [x, y] = px(u), size = Math.min(16, 9 + 2 * u.mass) * k;
+      cx.font = `${size}px system-ui`; cx.globalAlpha = 0.35 + 0.65 * u.health;
+      cx.fillStyle = `hsl(${f.color.h} ${f.color.s * u.health}% ${f.color.l}%)`; cx.fillText(f.area.join(" "), x, y); }
+    cx.globalAlpha = 1; st.textContent = `words · lead ${S.leader} · order ${S.units[0]?.four.order.map(d => d[0]).join("-")}`; return; }
+  if (S.image) { cx.fillStyle = "#0d0d12"; cx.fillRect(0, 0, cv.width, cv.height); cx.globalCompositeOperation = "source-over"; const cw = cv.width * 0.9 / S.image.w, ch = cv.height * 0.9 / S.image.h;   // picture mode: each unit is one cell
+    for (const u of live) { const a = S.appearance(u), [x, y] = px(u), L = u.target ? u.target.layer : 0;
+      // each layer lays down one thin coat in the unit's own colour; where five coats stack the picture is darkest
+      // the unit wears the colour of the place it settled (its environment), faded by its health
+      const P = window.__pix, cxl = Math.min(P.w - 1, Math.floor(u.target ? u.target.x * P.w : u.x * P.w)), cyl = Math.min(P.h - 1, Math.floor(u.target ? u.target.y * P.h : u.y * P.h)), q = (cyl * P.w + cxl) * 4;
+      const rgb = colorOf(u, P, cxl, cyl);
+      const [r, gg, bb] = rgb; if (u.opened) cx.filter = "brightness(0.75)";
+      cx.fillStyle = `rgb(${r},${gg},${bb})`; cx.globalAlpha = 0.7 + 0.3 * u.health; cx.fillRect(x - cw / 2, y - ch / 2, cw + 0.5, ch + 0.5); cx.filter = "none";
+      const n = 0;
+      if (n >= 3) { cx.globalAlpha = 0.9; cx.strokeStyle = "rgba(0,0,0,0.55)"; cx.lineWidth = 0.6 * k; cx.strokeRect(x - cw / 2, y - ch / 2, cw, ch); } }
+    cx.globalAlpha = 1; cx.globalCompositeOperation = "source-over";
+    const settled = live.filter(u => u.target && Math.hypot(u.x - u.target.x, u.y - u.target.y) < 0.006).length;
+    if (!S.recorded && settled >= 0.98 * live.length) rememberNow();
+    st.textContent = `picture · lead ${S.leader} · units ${live.length} · settled ${Math.round(100 * settled / live.length)}% · remembered ${remembered}${window.__scene ? ` · ${window.__scene.regions.length} regions, ${window.__scene.relations.length} relations` : ''} · Klein ${K.stats().rules} rules${window.__lastShape ? ' · looked most like: ' + window.__lastShape : ''}`; return; }
+  for (const u of live) { const a = S.appearance(u), [x, y] = px(u), r = 26 * k * (0.6 + u.mass / 3);
+    cx.fillStyle = a.hex; for (const [dx, dy] of a.points) cx.fillRect(x + dx * r, y + dy * r, 1.6 * k, 1.6 * k);   // sand on the plate
+    if (u.id === armed) { cx.strokeStyle = "#fff"; cx.lineWidth = k; cx.strokeRect(x - r / 2, y - r / 2, r, r); } }
+  const br = S.units.length - live.length;
+  st.textContent = `lead ${S.leader} · t ${S.t} · alive ${live.length} · broken off ${br} · clusters ${S.clusters().length}` + (window.__O?.focus?.status === 'resolved' ? ` · focus ${window.__O.focus.longitude.toFixed(1)}°` : '') + (window.__formation ? ` · reads as ${window.__formation}` : '') + (window.__N ? ` · needs open ${window.__N.open.length} · closed ${window.__N.closed.length}` : '');
+}
+let armedPart = null;
+cv.onpointerdown = ev => {
+  const r = cv.getBoundingClientRect(), x = (ev.clientX - r.left) * devicePixelRatio, y = (ev.clientY - r.top) * devicePixelRatio;
+  if (S.image) {                                     // picture: the function side acts on whole parts
+    const w = S.image.w, h = S.image.h, gx = Math.floor((x / cv.width - 0.05) / 0.9 * w), gy = Math.floor((y / cv.height - 0.05) / 0.9 * h);
+    if (gx < 0 || gy < 0 || gx >= w || gy >= h) return;
+    const part = S.findDoor(gx, gy);
+    const kind = partKind(part, w, h), learned = K.suggest("touch", kind);
+    // looking: the part's own corners, seen straight on (perspective_warper port) — its true proportions, not the slanted ones
+    let front = null; try { const px = [...part.cells].map(i => [i % w, Math.floor(i / w)]);
+      if (px.length >= 4 && window.__pix) { front = warp(window.__pix.d, w, h, cornersOf(px)); part.front = front; } } catch {}
+    if (!armedPart || !armedPart.cells.has(gy * w + gx)) { armedPart = part;
+      const reg = window.__scene?.regions.filter(r => gx >= r.bbox[0] && gx < r.bbox[0] + r.bbox[2] && gy >= r.bbox[1] && gy < r.bbox[1] + r.bbox[3]).sort((a, b) => a.n - b.n)[0];
+      const rels = reg ? window.__scene.relations.filter(e => e.s === reg.id || e.o === reg.id).slice(0, 3).map(e => e.text) : [];
+      info.textContent = `part: ${kind}, ${part.size} squares${front ? ` · straight on ${front.w}×${front.h}` : ""}${rels.length ? `\nsees: ${rels.join("; ")}` : ""} · hinge on the ${part.hinge * w > gx ? "right" : "left"}\n` +
+        (learned ? `learned from before: touching a ${kind} part ${learned}` : `nothing learned about ${kind} parts yet — default: open on the hinge`) + ` · tap again`; }
+    else { const k2 = partKind(armedPart, w, h); let result;
+      if ((K.suggest("touch", k2) ?? "opens") === "lifts" && !armedPart.lifted) { S.liftPart(armedPart); armedPart.lifted = true; result = "lifts"; }
+      else { const o = S.openPart(armedPart); result = o ? "opens" : "closes"; }
+      K.learn(["touch", k2, result]); saveK();
+      const st = K.stats(); info.textContent = `${result} (${armedPart.size} squares) · Klein learned ${st.rules} rules, ${st.links} links from ${st.events} events`; armedPart = null; }
+    return;
+  }
+  const u = S.units.filter(v => !v.broken).reduce((b, v) => { const [vx, vy] = px(v), d = Math.hypot(vx - x, vy - y); return d < b[1] ? [v, d] : b; }, [null, 1e9])[0];
+  if (!u) return;
+  picked = u.id; const F = u.four;
+  if (armed !== u.id) { armed = u.id; const p = S.predict(u.id), W = u.why; u.shownPrediction = p.instruction;
+    info.textContent = `${u.kind} · ${u.address.gate ? "gate " + u.address.gate + "." + (u.address.line ?? "") : ""} · health ${u.health.toFixed(2)}` +
+      (u.decline ? ` · declining: ${u.decline.cause}` : "") + `\nsound ${u.sound.f0.toFixed(1)} Hz → shape modes ${u.shape.modes.join("×")}` +
+      `\n${u.letters}\nnow: ${p.instruction ?? "(no instruction)"} · touching will ${p.instruction ?? "hold"} ${p.moves.length} unit(s)` +
+      `\nwhy (seen × experienced) ${W.why.map(v => v.toFixed(2)).join(", ")} · strength ${W.strength.toFixed(2)} · lead ${S.leader}` +
+      `\nfour: ${F.parts.map(p => `${p.part}(${p.dim[0]}) ${p.words.join("·") || "—"}`).join(" | ")}` +
+      `\nmoves by '${F.motion.capital}'${F.motion.instruction ? " (" + F.motion.instruction + ")" : ""}${F.confirmedOrder ? "" : " · order for this leader NOT confirmed"}` + (u.sentence ? `\n${u.sentence}` : "") + (u.ability ? `\ntool: ${u.ability.tool} (${u.ability.kind}) · core ${u.ability.core}` : `\nlines ${u.lines?.join("") ?? "-"} (not a whole hexagram: no tool alone)`) + (u.output ? `\nlast formation (${u.output.units.length} units): ${u.output.tool} → ${u.output.ok ? "ran" : u.output.reason}` : "") + (u.focusRelation ? `\nfocus: takes part ${(u.focusWeight * 100).toFixed(0)}% · relates by ${u.focusRelation}` : "");
+    info.textContent += (u.face ? `\nface: ${u.face.name}${u.face.earned ? " (earned on gate " + u.address.gate + ")" : " (trying)"} → ${JSON.stringify(u.face.result).slice(0, 80)}` : "\nface: none yet")
+      + (u.blue?.line ? `\nBlue I Ching ${u.address.gate}.${u.address.line} ${u.blue.line.name}: ✓ ${u.blue.line.exalted_short || u.blue.line.exalted} · ✗ ${u.blue.line.detriment}` : "");
+  } else {
+    KL.grow(S);
+    if (u.particle) {   // the unit decides itself: its culture, else instinct from a bonded neighbour, else its program
+      const r = KL.touchLocal(S, u.id, "part", null, u.shownPrediction);
+      info.textContent = `→ did: ${r.result} (from ${r.from}${r.via != null ? " via unit " + r.via : ""}, ${r.moved.length} moved)\n` + info.textContent;
+    } else { const p = S.touch(u.id); info.textContent += `\n→ did: ${p.act}`; }   // not a particle: earlier touch, kept
+    armed = null; }
+  draw();
+};
+document.getElementById("lead").onchange = e => { S.pinnedLeader = e.target.value !== "auto"; if (S.pinnedLeader) S.leader = e.target.value; };
+let picked = null;
+document.getElementById("speak").onclick = () => { const u = S.units[picked ?? 0]; speechSynthesis.cancel();
+  speechSynthesis.speak(new SpeechSynthesisUtterance(u.voice.join(" "))); };
+let ac = null;
+document.getElementById("play").onclick = () => { const u = S.units[picked ?? 0]; ac ??= new AudioContext(); let t = ac.currentTime + 0.05;
+  for (const n of u.melody.slice(0, 32)) { const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = n.hz;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.15, t + 0.02); g.gain.linearRampToValueAtTime(0, t + n.beats * 0.12);
+    o.connect(g).connect(ac.destination); o.start(t); o.stop(t + n.beats * 0.12 + 0.02); t += n.beats * 0.12; } };
+var formPicture = async function (files) { if (!files.length) return; picName = files.map(f => f.name).join(" + "); S.recorded = false;
+  // every file is read at the same size; each is sorted by its own numbers into the level it belongs to
+  const first = await createImageBitmap(files[0]), w = 80, h = Math.round(80 * first.height / first.width), maps = {}, kinds = [];
+  for (const f of files) { const im = await createImageBitmap(f), c = new OffscreenCanvas(w, h), g2 = c.getContext("2d");
+    g2.drawImage(im, 0, 0, w, h); const dd = g2.getImageData(0, 0, w, h).data, k = classifyMap(dd); maps[k] = dd; kinds.push(`${f.name}: ${k} map → ${LEVEL_OF_MAP[k]}`); }
+  const d = files.length > 1 ? combineMaps(maps, w, h) : (maps.color ?? maps.mask ?? maps.glow ?? maps.normal), gray = new Float32Array(w * h);
+  window.__pix = { d, w, h }; window.__maps = maps; S.mode = null; window.__kinds = kinds;
+  for (let i = 0; i < w * h; i++) gray[i] = (0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]) / 255;
+  // every layer needs one unit per cell it covers; units are made in that layer's dimension
+  const DIMS = ["Movement", "Evolution", "Being", "Design", "Space"], pre = (await import("./bhantugh_ops.js")).asciiImage(gray, w, h);
+  // one unit per square: a square belongs to the deepest layer it reaches (its own band), made in that layer's dimension
+  const need = [0, 0, 0, 0, 0]; for (let i = 0; i < w * h; i++) { let b = 0; for (let k = 0; k < 5; k++) if (pre.layers[k][i]) b = k; need[b]++; }
+  need.forEach((n, k) => { const have = S.units.filter(u => !u.broken && u.address.dimension === DIMS[k]).length;
+    for (let i = have; i < n; i++) { const a = { gate: 1 + Math.floor(Math.random() * 64), line: 1 + Math.floor(Math.random() * 6), color: 1 + Math.floor(Math.random() * 6),
+      tone: 1 + Math.floor(Math.random() * 6), base: k + 1, dimension: DIMS[k] };
+      const want = 3;   // nested: every dimension holds all of them
+      if (want >= 2) Object.assign(a, { degree: Math.floor(Math.random() * 30), minute: Math.floor(Math.random() * 60), second: Math.floor(Math.random() * 60) });
+      if (want >= 3) Object.assign(a, { arc: Math.floor(Math.random() * 100), house: 1 + Math.floor(Math.random() * 12) });
+      S.add(a, "person"); } });
+  const im = S.picture(gray, w, h); S.imageRGB = maps.mask ?? maps.packed ?? window.__pix.d;
+  { const src = S.imageRGB, pg = new Float32Array(w * h); for (let i = 0; i < w * h; i++) pg[i] = (0.299 * src[i * 4] + 0.587 * src[i * 4 + 1] + 0.114 * src[i * 4 + 2]) / 255;
+    S.partEdges = src === window.__pix.d ? null : (await import("./bhantugh_ops.js")).asciiImage(pg, w, h).edges; }   // the parts level sees its own borders   /* packed maps are surface, not parts: parts come from the seen picture */   // parts come from the mask level when there is one
+  // the square each unit settled on sets its degree, minute, second and arc-second — only if its dimension carries "when"
+  for (const u of S.units) { u.q = qualitiesOfState(u.address.dimension); u.carries = carriedSections(u.address.dimension, S.leader);
+    if (u.target && u.carries.includes("when")) Object.assign(u.address, fineFromCell(Math.floor(u.target.x * w), Math.floor(u.target.y * h), w, h)); }
+  // which squares hold a unit that carries colour (others take colour from these through their own pattern)
+  window.__hasColor = new Uint8Array(w * h); for (const u of S.units) if (u.target && u.q.qualities.includes("color")) __hasColor[Math.floor(u.target.y * h) * w + Math.floor(u.target.x * w)] = 1; info.innerHTML = `<div>${kinds.join("<br>")}</div><pre style="font-size:5px;line-height:5px;margin:0">${im.text}</pre>`; }
+document.getElementById("pic").onchange = e => formPicture([...e.target.files]);
+// what is where: regions of the picture and how they relate (Morph3D v10's model-free reading, scene.js)
+const _form = formPicture; formPicture = async files => { await _form(files);
+  try { const P = window.__pix; window.__scene = readScene(P.d, P.w, P.h);
+    for (const r of window.__scene.relations.slice(0, 40)) K.learn(["sees", r.rel, "relation"]); saveK(); } catch {} };
+document.getElementById("rel").onclick = () => S.release();
+// Reskin: a new colour map replaces only the Being level; shape, creases, shine, metal and parts stay as they are,
+// and every unit stays where it is.
+async function reskin(f, dd) { if (!window.__maps || !window.__pix) return;
+  const { w, h } = window.__pix;
+  if (!dd) { const im = await createImageBitmap(f), c = new OffscreenCanvas(w, h), g2 = c.getContext("2d"); g2.drawImage(im, 0, 0, w, h); dd = g2.getImageData(0, 0, w, h).data; }
+  window.__maps.color = dd; const target = Object.keys(window.__maps).length > 1 ? combineMaps(window.__maps, w, h) : dd;
+  // the new surface spreads through the swarm: units whose own byte is closest to 'morph' take it first
+  const buf = new Uint8ClampedArray(window.__pix.d); window.__pix.d = buf;
+  wave = window.__wave = new JobWave(S.units.filter(u => !u.broken && u.target), "reskin");
+  wave.apply = u => { const i = (Math.min(h - 1, Math.floor(u.target.y * h)) * w + Math.min(w - 1, Math.floor(u.target.x * w))) * 4; for (let j = 0; j < 4; j++) buf[i + j] = target[i + j]; };
+  wave.finish = () => { window.__pix.d = target; };
+  picName += " · reskin " + (f?.name ?? ""); S.recorded = false; K.learn(["reskin", "color", "Being"]); saveK();
+  info.textContent = `job: reskin (${f?.name ?? "colour map"}) · the colour level is spreading through the units that answer 'morph' first; normal, packed and parts kept`; }
+document.getElementById("skin").onchange = e => { const f = e.target.files[0]; if (f) reskin(f); };
+// autonomous: the swarm reads what came in against what it holds and picks the job itself
+let wave = null;
+async function kindsOf(files) { const out = []; for (const f of files) { const im = await createImageBitmap(f), c = new OffscreenCanvas(64, 64), g = c.getContext("2d"); g.drawImage(im, 0, 0, 64, 64); out.push({ file: f, kind: classifyMap(g.getImageData(0, 0, 64, 64).data) }); } return out; }
+document.getElementById("any").onchange = async e => { let files = [...e.target.files]; if (!files.length) return;
+  // a 3-D model: the swarm takes its surface as its shape (port of morphing-particle-swarm's GLB sampling)
+  const glb = files.filter(f => /\.glb$/i.test(f.name));
+  for (const f of glb) { try { const tris = parseGLB(await f.arrayBuffer()), live = S.units.filter(u => !u.broken);
+      const P = project(sampleSurface(tris, live.length, 7)); live.forEach((u, i) => { u.target = { x: P[i].x, y: P[i].y, layer: 2 }; });
+      info.textContent = `job: form 3-D (${f.name}) · ${tris.length} triangles · ${live.length} units on its surface`; K.learn(["given", "glb", "form3d"]); saveK();
+    } catch (err) { info.textContent = `could not read ${f.name}: ${err.message}`; } }
+  // anything that is not a picture or a model: taken in as units, and each one not yet understood is a NEED
+  const other = files.filter(f => !/^image\//.test(f.type) && !/\.glb$/i.test(f.name));
+  if (other.length) { const fl = await Promise.all(other.map(async f => ({ path: f.name, text: await f.text() })));
+    O.takeIn(fl); const lines = [];
+    // every unit reads its share with its own AUTOLING; only what the swarm cannot place becomes a need
+    for (const f of fl) { const r = readFile(S, f); lines.push(`${f.path}: ${r.lines} lines · ${Math.round(r.understood * 100)}% placed` + (r.heldBefore ? ` (${r.heldBefore} from earlier reading)` : "") + (r.gaps.length ? ` · can't place yet: ${r.gaps.slice(0, 3).map(g => g.line.slice(0, 40)).join(" | ")}` : ""));
+      if (r.gaps.length) N.raise("understand-file", f.path, { name: f.path, text: f.text, gaps: r.gaps }); }
+    info.textContent = lines.join("\n") + (N.open.length ? `\n${N.open.length} need(s) open: waiting for a formation that can answer` : "");
+    // functional morphogenesis: if the files are a host missing a function its own asserts describe, the swarm builds it
+    if (discover(observe(fl)).length) { const gates = S.units.filter(u => !u.broken && u.particle).slice(0, 12);
+      const r = lifecycle(fl, LIB, gates); try { localStorage.setItem("synthia-library", JSON.stringify(LIB)); } catch {}
+      const say = { enter: s => `enter: host ${s.hostRuns ? "runs" : "does not run" + (s.error ? " (" + s.error + ")" : "")}`, observe: s => `observe: ${s.files} files, ${s.defines} defined, ${s.asserts} asserts`,
+        discover: s => `discover: missing ${s.missing.join(", ")}`, experiment: s => `experiment: ${s.name} — ${s.tried} arrangements tried, ${s.found ? "found" : "none worked"}`,
+        reuse: s => `reuse: ${s.name} from what it learned as '${s.learnedAs}'`, test: s => `test: ${s.name} passes ${s.cases}/${s.cases}`, clone: s => `clone: ${s.name} grown from units ${s.units.join(", ") || "(learned)"}`,
+        integrate: s => `integrate: host ${s.hostRuns ? "runs, every assert passes" : "still fails"}`, extract: s => `extract: ${s.hostRunsWithoutSwarm ? "host runs with the swarm gone" : "host needs the swarm — not kept"}`,
+        learn: s => `learn: ${s.library} arrangement(s) kept`, fail: s => `failed: ${s.name} — ${s.reason}` };
+      document.getElementById("life").innerHTML = "<b>lifecycle</b><br>" + r.report.steps.map(s => (say[s.step] ?? (() => s.step))(s)).join("<br>")
+        + r.host.filter(f => f.grown || fl.every(o => o.path !== f.path || o.text !== f.text)).map(f => `<br><a download="${f.path.split("/").pop()}" href="data:text/javascript,${encodeURIComponent(f.text)}">download ${f.path}</a>`).join(""); }
+    // finishing an app: functions the dropped files need but nothing defines, built by the units from the app's own asserts
+    { const fin = finishApp(O, fl); if (fin.length) document.getElementById("life").innerHTML += "<br><b>finish the app</b><br>" + fin.map(x => x.ok
+        ? `${x.name}: built by ${x.by} (${x.plan.join(" → ")}), meets ${x.cases} examples · <a download="${x.path.split("/").pop()}" href="data:text/javascript,${encodeURIComponent(x.code)}">download ${x.path}</a>`
+        : `${x.name}: not built — ${x.why}`).join("<br>"); }
+  }
+  files = files.filter(f => /^image\//.test(f.type)); if (!files.length) { e.target.value = ""; return; }
+  const ks = await kindsOf(files), job = readJob({ files: ks }, { hasPicture: !!S.image });
+  K.learn(["given", ks.map(k => k.kind).join("+"), job]); saveK();
+  if (job === "reskin") await reskin(ks[0].file); else { await formPicture(files); info.innerHTML = `<div>job: form (${ks.map(k => k.kind).join(" + ")})</div>` + info.innerHTML; }
+  e.target.value = ""; };
+document.getElementById("manual").onchange = e => { document.getElementById("man").style.display = e.target.checked ? "inline-flex" : "none"; };
+document.getElementById("exp").onclick = async () => { const j = JSON.parse(await EXP.exportJSON()); j.klein = K.export(); j.cultures = KL.exportCultures(S); j.needs = N.export(); j.library = LIB; const blob = new Blob([JSON.stringify(j)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `synthia-experience-${remembered}.json`; a.click(); };
+document.getElementById("imp").onchange = async e => { const f = e.target.files[0]; if (!f) return; const t = await f.text(); remembered += await EXP.importJSON(t); try { K.import(JSON.parse(t).klein); saveK(); } catch {} try { savedCultures = JSON.parse(t).cultures ?? savedCultures; KL.applyCultures(S, savedCultures); } catch {} };
+document.getElementById("words").onclick = e => { S.mode = S.mode === "words" ? null : "words"; e.target.textContent = S.mode ? "Shapes" : "Words"; };
+document.getElementById("run").onclick = e => { running = !running; e.target.textContent = running ? "Pause" : "Run"; };
+document.getElementById("drop").onclick = () => S.add({ gate: 1 + Math.floor(Math.random() * 64), line: 1 + Math.floor(Math.random() * 6) }, "item", Math.random(), Math.random());
+let klTick = 0;
+const O = new OrganismSwarm(S); window.__O = O;
+loadRecognizer(p => fetch(p).then(r => r.text())).then(r => { O.recognizer = r; }).catch(() => {});
+document.getElementById("focus").onclick = () => { if (picked == null) { info.textContent = "Tap a unit first, then Focus."; return; }
+  const f = O.setFocus(S.units[picked].address); info.textContent = f.status === "resolved" ? `Focus set at ${f.longitude.toFixed(2)}°. Every unit now reads its own angle to it.` : "That unit has no placement to focus on."; };
+document.getElementById("files").onchange = async e => { const fl = [...e.target.files]; const files = await Promise.all(fl.map(async f => ({ path: f.name, text: await f.text() })));
+  const r = O.takeIn(files); info.textContent = `Took in ${files.length} file(s) as units · ${r.channels.length} links found · ${r.gaps.length} gap(s): ` + r.gaps.slice(0, 6).map(g => `${g.file} ${g.kind} ${g.key}`).join("; "); };
+// cultures survive a reload: saved by identity every 200 steps, given back to units that have not lived anything yet
+let savedCultures = null; try { savedCultures = JSON.parse(localStorage.getItem("synthia-cultures") || "null"); } catch {}
+// ---- looking things up (arXiv, PubMed, GitHub) and learning abilities from a repository (through the sealed chamber) ----
+const CORPUS = new Corpus((() => { try { return JSON.parse(localStorage.getItem("synthia-corpus") || "[]"); } catch { return []; } })());
+const ABILITIES = (() => { try { return JSON.parse(localStorage.getItem("synthia-abilities") || "[]"); } catch { return []; } })();
+let CH = null; const chamber = () => (CH ??= new Chamber());
+const say = html => { document.getElementById("found").innerHTML = html; }, escH = s => String(s).replace(/[<&>]/g, c => ({ "<": "&lt;", "&": "&amp;", ">": "&gt;" }[c]));
+document.getElementById("lookup").onclick = async () => { const q = document.getElementById("ask").value.trim(); if (!q) return; say("looking…");
+  const { found, failed } = await lookUp(q);
+  for (const d of found) { CORPUS.add(d); readFile(S, { path: d.title, text: `${d.title}. ${d.text}` }); }   // every unit reads its share of what was found
+  try { localStorage.setItem("synthia-corpus", JSON.stringify(CORPUS.export().slice(-400))); } catch {}
+  const best = CORPUS.search(q, 8);
+  say(`<b>${found.length} found</b>${failed.length ? ` · couldn't reach: ${failed.map(f => escH(f.source + " (" + f.why + ")")).join(", ")}` : ""} · read into the swarm · ${CORPUS.docs.length} in what it has read<br>`
+    + best.map(d => `<div style="margin:4px 0">[${escH(d.provider ?? "")}] <a href="${escH(d.url ?? "#")}" target="_blank" style="color:#9cf">${escH(d.title)}</a> <span style="color:#889">${d.score}</span><br><span style="color:#aab">${escH((d.text ?? "").slice(0, 160))}</span></div>`).join("")); };
+document.getElementById("repo").onclick = async () => { const name = document.getElementById("ask").value.trim().replace(/^https?:\/\/github.com\//, "").replace(/\.git$/, ""); if (!/^[\w.-]+\/[\w.-]+$/.test(name)) return say("give it owner/repo");
+  say(`reading ${escH(name)}…`); try { const { files, truncated } = await repoFiles(name); const H = harvest(files);
+    say(`${files.length} files · ${H.length} functions with examples in their own tests · trying each in the sealed chamber…`);
+    const { kept, refused } = await adopt(chamber(), H);
+    for (const k of kept) if (!ABILITIES.some(a => a.id === k.id && a.from === k.from)) ABILITIES.push({ id: k.id, fnName: k.fnName, inputs: k.inputs, output: k.output, source: k.source, from: `${name}/${k.from}`, examples: k.examples });
+    try { localStorage.setItem("synthia-abilities", JSON.stringify(ABILITIES)); } catch {}
+    say(`<b>${kept.length} new abilit${kept.length === 1 ? "y" : "ies"}</b> from ${escH(name)} (only Movement units may carry them; they only ever run in the chamber)${truncated ? " · repo was large: partly read" : ""}<br>`
+      + kept.map(k => `✓ ${escH(k.fnName)}(${escH(Object.values(k.inputs).join(", "))}) → ${escH(k.output)} · ${k.examples} examples passed`).join("<br>")
+      + (refused.length ? `<br><span style="color:#a88">refused ${refused.length}: ${refused.slice(0, 6).map(r => escH(r.name + " — " + r.why)).join("; ")}</span>` : "")); }
+  catch (e) { say("couldn't read that repository: " + escH(e.message ?? e)); } };
+// ---- bookshelf: books read on the phone itself (the picker includes Google Drive); same budget for every field ----
+const shelfSay = html => { document.getElementById("shelfout").innerHTML = html; };
+const showShelf = async () => { const B = await shelf().catch(() => []); shelfSay(B.map(b => `📖 <b>${escH(b.name)}</b> → ${b.field} · ${b.pages ?? "?"} pages · ${b.found} of 64 gates found${b.scannedPages ? ` · ${b.scannedPages} scanned pages read by sight (confidence ${b.scanConfidence}%)` : ""}${b.emptyPages ? ` · <span style="color:#a88">${b.emptyPages} pages couldn't be read</span>` : ""}`).join("<br>") || "shelf is empty"); };
+document.getElementById("shelve").onclick = async () => { const files = [...document.getElementById("books").files], field = document.getElementById("bookfield").value; if (!files.length) return shelfSay("choose a book first");
+  for (const f of files) { shelfSay(`reading ${escH(f.name)}…`);
+    try { const r = /\.pdf$/i.test(f.name) ? await pdfText(f, (i, n, sc) => { shelfSay(`reading ${escH(f.name)}: page ${i} of ${n}${sc ? ` · ${sc} scanned pages read by sight (slower)` : ""}`); }, { scans: true }) : { text: await f.text(), pages: 1, emptyPages: 0 };
+      const s = splitByGate(r.text); await shelve({ name: f.name, field, pages: r.pages, emptyPages: r.emptyPages, scannedPages: r.scannedPages, scanConfidence: r.scanConfidence, found: s.found, sections: s.sections, general: s.general.slice(0, 20000), t: Date.now() }); }
+    catch (e) { shelfSay("couldn't read " + escH(f.name) + ": " + escH(e.message ?? e)); return; } }
+  showShelf(); };
+document.getElementById("teach").onclick = async () => { const B = await shelf(); if (!B.length) return shelfSay("shelf is empty");
+  const out = B.map(b => ({ b, r: teach(S, (x, file) => readFile(x, file), b) }));
+  shelfSay(out.map(({ b, r }) => `✓ ${b.field} read <b>${escH(b.name)}</b>: ${r.gates} gates × up to ${r.words} words (${r.lines} lines)`).join("<br>") + "<br><span style='color:#889'>every field gets the same budget per gate; Space reads from all of them</span>"); };
+showShelf();
+(function loop() { if (running && klTick % 200 === 0) { KL.applyCultures(S, savedCultures); if (klTick) { try { savedCultures = { ...(savedCultures ?? {}), ...KL.exportCultures(S) }; localStorage.setItem("synthia-cultures", JSON.stringify(savedCultures)); } catch {} } }
+  if (wave) { wave.tickTimed(wave.apply); if (wave.done) { wave.finish(); wave = null; } } if (running) { O.step(); ++klTick;
+  if (klTick % 10 === 0 && S.units.some(u => u.grammar)) gossipGrammar(S);   // what units read passes by contact
+  // tools run only for a need: when nothing is open, nothing runs
+  if (N.open.length && klTick % 10 === 0) { const done = act(S, N); if (done.length) { saveN(); const d = done.at(-1);
+      info.textContent = `need: ${d.need} (${d.subject}) · ${d.tool} ${d.closed ? "closed it" : "tried, gap still open → next try uses a different tool"}` + (d.meaning ? `\nit does: ${(d.meaning.does ?? []).join(", ")} · needs: ${(d.meaning.needs ?? []).join(", ")}` : ""); } }
+  if (O.recognizer && klTick % 30 === 0) { const r = O.recognize(); const top = Object.entries(r.tally).sort((a, b) => b[1] - a[1])[0]; window.__formation = top ? `${top[0]} (${top[1]}/${r.labels.length} units)` : null; } } draw(); setTimeout(() => requestAnimationFrame(loop), 50); })();
+
+// ---- build another me: the live swarm plans its child (reproduce.js) and hands it what it learned (child.js) ----
+import { makeChild } from "./child.js";
+import { finishApp } from "./finish.js";
+document.getElementById("child").onclick = async () => { const o = document.getElementById("childout"); o.textContent = "planning the child…";
+  try { const r = await makeChild({ S, FA, K, KL, N, LIB, extra: document.getElementById("childx").value.trim() });
+    const g = r.genome; o.innerHTML = r.steps.map(s => s.step + (s.note ? ": " + s.note : "")).join(" → ")
+      + `<br>child ${r.n}: ${g.bindings.length} function↔form bindings · ${g.holes.length} side(s) filled by labelled best guess · inherits faces, Klein culture, cultures, needs, library`
+      + `<br><a href="${r.url}" target="_blank">open child ${r.n}</a> · <a download="genome-child-${r.n}.json" href="data:application/json,${encodeURIComponent(JSON.stringify(g, null, 1))}">download its genome</a>`;
+  } catch (err) { o.textContent = "could not build the child: " + err.message; } };
+if (window.__GENOME) document.getElementById("childout").textContent = `I am a child: born ${window.__GENOME.born}, from "${window.__GENOME.request}"${window.__GENOME.extra ? " (" + window.__GENOME.extra + ")" : ""}; I started from what my parent learned.`;
+
+// ---- birth: rebuild the swarm from anyone's four charts ----
+{ const bz = document.getElementById("bzone"); bz.value = BIRTH.zone || Intl.DateTimeFormat().resolvedOptions().timeZone; if (BIRTH.date) document.getElementById("bdate").value = BIRTH.date; if (BIRTH.time) document.getElementById("btime").value = BIRTH.time;
+  document.getElementById("bstat").textContent = CHARTS ? `four charts · design moment ${CHARTS.designUtc.slice(0, 16)}Z · ${Object.entries(CHARTS.charts).map(([d, c]) => d + ": " + c.system).join(" · ")}` : "using the sample chart — enter birth data to build from yours";
+  document.getElementById("bgo").onclick = () => { const q = new URLSearchParams(location.search); q.set("date", document.getElementById("bdate").value); q.set("time", document.getElementById("btime").value || "12:00"); q.set("zone", bz.value.trim() || "UTC");
+    if (!q.get("date")) { document.getElementById("bstat").textContent = "enter a birth date first"; return; } location.search = q.toString(); }; }
+
+// ---- the trained five-dimension neural net (swarm_model.js + trained_swarm.json), run on each chart's 26 units ----
+import { SwarmModel, buildGraph, PRIMARY_NAMES } from "./swarm_model.js";
+{ const NN = new SwarmModel(await fetch("./trained_swarm.json").then(r => r.json())); window.__NN = NN;
+  const think = () => { const groups = {}; for (const u of S.units) if (!u.latent && !u.broken && u.address.field) (groups[u.address.field] ??= []).push(u);
+    const lines = [];
+    for (const [field, us] of Object.entries(groups)) { if (us.length !== 26) continue;
+      const g = buildGraph(us.map(u => u.address), 8), { X, five } = NN.inputs(g.A, g.D, us.map(u => u.address.gate)), out = NN.forward(g.W, X);
+      us.forEach((u, i) => { u.nn = { five: Object.fromEntries(PRIMARY_NAMES.map((n, k) => [n, +five[i][k].toFixed(2)])), type: NN.types[out.pred[i]], p: Math.max(...out.probs[i]) }; });
+      const votes = {}; for (const u of us) votes[u.nn.type] = (votes[u.nn.type] ?? 0) + 1; const top = Object.entries(votes).sort((a, b) => b[1] - a[1])[0];
+      lines.push(`${field}: reads as ${top[0]} (${top[1]}/26 units)`); }
+    document.getElementById("nn").textContent = lines.length ? "neural net (trained, 71% on its test set): " + lines.join(" · ") : ""; };
+  think(); setInterval(think, 3000); }
+
+// ---- the kernel on the same units: +/0/- meeting, emergent nets, changing lines, address sentences ----
+import { KernelBridge } from "./kernel_bridge.js";
+{ const KB = new KernelBridge(S); window.__KB = KB;
+  setInterval(() => KB.meetAll(), 250);
+  setInterval(() => { const r = KB.step(), ch = { "1": 0, "0": 0, "-1": 0 }; for (const u of S.units) if (u.charge != null) ch[u.charge]++;
+    document.getElementById("kern").textContent = `kernel: ${r.formations} nets · ${r.flips} line changes so far · charge +${ch["1"]} 0:${ch["0"]} −${ch["-1"]} · ${KB.meetings} meetings`; }, 1000);
+  document.getElementById("c").addEventListener("click", () => setTimeout(() => { const u = S.units[picked ?? -1]; if (!u?.kp) return;
+    info.textContent += `
+sentence: ${KB.sentence(u)}
+charge ${u.charge > 0 ? "+" : u.charge < 0 ? "−" : "0"} · tension ${(u.tension ?? 0).toFixed(2)}`
+      + (u.current ? ` · now at gate ${u.current.gate}.${u.current.line} (changed from ${u.current.from}: ${u.current.cause}); born at ${u.address.gate}.${u.address.line}` : "")
+      + (u.address.field ? ` · chart: ${u.address.field}` : "") + (u.latent ? " · latent (not activated, still part of the whole)" : "")
+      + (u.nn ? `
+neural net: reads ${u.nn.type} (${(u.nn.p * 100).toFixed(0)}%) · ${Object.entries(u.nn.five).map(([k, v]) => k + " " + v).join(" · ")}` : ""); }, 0)); }
+</script></body></html>

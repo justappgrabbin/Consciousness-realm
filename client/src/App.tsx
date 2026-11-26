@@ -12,6 +12,16 @@ import ExperienceNotification from "./components/ui/ExperienceNotification";
 import GamepadHelpOverlay from "./components/ui/GamepadHelpOverlay";
 import TouchControls from "./components/ui/TouchControls";
 import AgentWorld from "./pages/AgentWorld";
+import { SwarmWorldEngine } from "./engine/SwarmWorldEngine";
+
+/** the same world beside itself: agents whose minds are the Synthia swarm */
+function SwarmAgentWorld() {
+  const [engine, setEngine] = useState<SwarmWorldEngine | null>(null), [err, setErr] = useState<string | null>(null);
+  useEffect(() => { SwarmWorldEngine.create().then(e => { (window as any).__SWE = e; setEngine(e); }).catch(e => setErr(String(e?.message ?? e))); }, []);
+  if (err) return <div style={{ color: '#f88', padding: 40 }}>swarm could not load: {err}</div>;
+  if (!engine) return <div style={{ color: '#cde', padding: 40 }}>waking the swarm…</div>;
+  return <AgentWorld engine={engine} />;
+}
 import { getDevicePixelRatio, getPerformanceTier } from "./utils/deviceDetection";
 import "@fontsource/inter";
 import "./index.css";
@@ -38,7 +48,7 @@ const controls = [
   { name: Controls.jump, keys: ["Space"] },
 ];
 
-type AppMode = 'world' | 'game';
+type AppMode = 'world' | 'swarm' | 'game';
 
 function ModeToggle({ mode, onChange }: { mode: AppMode; onChange: (m: AppMode) => void }) {
   return (
@@ -57,7 +67,7 @@ function ModeToggle({ mode, onChange }: { mode: AppMode; onChange: (m: AppMode) 
         backdropFilter: 'blur(12px)',
       }}
     >
-      {(['world', 'game'] as AppMode[]).map(m => (
+      {(['world', 'swarm', 'game'] as AppMode[]).map(m => (
         <button
           key={m}
           onClick={() => onChange(m)}
@@ -75,7 +85,7 @@ function ModeToggle({ mode, onChange }: { mode: AppMode; onChange: (m: AppMode) 
             color: mode === m ? '#fff' : 'rgba(255,255,255,0.35)',
           }}
         >
-          {m === 'world' ? '◎ Agent World' : '⬡ Game'}
+          {m === 'world' ? '◎ Agent World' : m === 'swarm' ? '✦ Swarm World' : '⬡ Game'}
         </button>
       ))}
     </div>
@@ -105,6 +115,8 @@ function App() {
 
         {mode === 'world' ? (
           <AgentWorld />
+        ) : mode === 'swarm' ? (
+          <SwarmAgentWorld />
         ) : (
           <KeyboardControls map={controls}>
             <Canvas

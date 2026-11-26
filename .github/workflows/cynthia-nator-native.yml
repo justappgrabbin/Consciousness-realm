@@ -1,0 +1,34 @@
+name: Cynthia-nator native verification
+on:
+  push:
+    branches:
+      - integration/cynthia-nator-habitat
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-morphogenesis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify native host construction, extraction and reuse
+        run: node tests/native-realm-capacity.test.mjs
+      - name: Verify original habitat fixtures
+        run: node tests/little-miracles-habitat.test.mjs
+  realm-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
